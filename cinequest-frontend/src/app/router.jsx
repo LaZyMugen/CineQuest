@@ -4,6 +4,7 @@ import Shows from "../pages/Shows";
 import SeatSelection from "../pages/SeatSelection";
 import Admin from "../pages/Admin";
 import NotFound from "../pages/NotFound";
+import MyBookings from "../pages/MyBookings";
 
 const router = createBrowserRouter([
 	{
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
 	{
 		path: "/admin",
 		element: <Admin />,
+	},
+	{
+		path: "/my-bookings",
+		element: <MyBookings />,
 	},
 	{
 		path: "*",

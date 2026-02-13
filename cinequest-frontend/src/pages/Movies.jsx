@@ -1,11 +1,14 @@
 import MovieCard from "../components/movie/MovieCard";
 import { useMovies } from "../hooks/useMovies";
+import Navbar from "../components/layout/Navbar";
 
 export default function Movies() {
   const { movies, loading, error } = useMovies();
 
   return (
-    <div className="p-6 space-y-4">
+    <>
+      <Navbar />
+      <div className="p-6 space-y-4">
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold">Now Showing</h1>
         <p className="text-sm text-gray-600">
@@ -30,6 +33,7 @@ export default function Movies() {
           ))}
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }
