@@ -27,6 +27,36 @@ export async function fetchSeats(showId) {
   return data ?? [];
 }
 
+export async function fetchShowsForMovie(movieId) {
+  const { data, error } = await supabase
+    .from("show")
+    .select("*")
+    .eq("movie_id", movieId)
+    .order("show_time", { ascending: true });
+
+  if (error) {
+    console.error("Supabase fetchShowsForMovie error", error);
+    throw error;
+  }
+
+  return data ?? [];
+}
+
+export async function deleteMovie(movieId) {
+  const { data, error } = await supabase
+    .from("movie")
+    .delete()
+    .eq("movie_id", movieId)
+    .select("*");
+
+  if (error) {
+    console.error("Supabase deleteMovie error", error);
+    throw error;
+  }
+
+  return data ?? [];
+}
+
 export async function bookSeats({ userId, showId, seatIds }) {
   const { data, error } = await supabase.rpc("book_seats", {
     p_user_id: userId,

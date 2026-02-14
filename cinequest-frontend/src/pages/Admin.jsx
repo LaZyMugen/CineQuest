@@ -6,6 +6,8 @@ import {
 	insertMovie,
 	insertShow,
 	cancelBooking,
+	fetchShowsForMovie,
+	deleteMovie,
 } from "../lib/api";
 
 export default function Admin() {
@@ -27,6 +29,8 @@ export default function Admin() {
 	const [movieSubmitting, setMovieSubmitting] = useState(false);
 	const [movieMessage, setMovieMessage] = useState("");
 	const [movieFormError, setMovieFormError] = useState("");
+	const [movieDeleteLoadingId, setMovieDeleteLoadingId] = useState(null);
+	const [movieDeleteError, setMovieDeleteError] = useState("");
 
 	// Add Show form state
 	const [showMovieId, setShowMovieId] = useState("");
@@ -129,6 +133,25 @@ export default function Admin() {
 			setMovieFormError("Failed to add movie.");
 		} finally {
 			setMovieSubmitting(false);
+		}
+	}
+
+	async function handleDeleteMovie(movieId) {
+		setMovieDeleteError("");
+		setMovieDeleteLoadingId(movieId);
+		try {
+			const shows = await fetchShowsForMovie(movieId);
+			if (Array.isArray(shows) && shows.length > 0) {
+				setMovieDeleteError("Cannot delete movie with existing shows");
+				return;
+			}
+			await deleteMovie(movieId);
+			await loadMovies();
+		} catch (err) {
+			console.error("Admin handleDeleteMovie error", err);
+			setMovieDeleteError("Failed to delete movie.");
+		} finally {
+			setMovieDeleteLoadingId(null);
 		}
 	}
 
@@ -240,6 +263,36 @@ export default function Admin() {
 				)}
 				{moviesError && (
 					<p className="text-xs text-red-600">{moviesError}</p>
+				)}
+				{movieDeleteError && (
+					<p className="text-xs text-red-600">{movieDeleteError}</p>
+				)}
+				{!moviesLoading && !moviesError && movies.length > 0 && (
+					<div className="mt-3 border-t pt-3 text-sm">
+						<h3 className="font-semibold mb-2">Existing Movies</h3>
+						<ul className="space-y-1">
+							{movies.map((m) => {
+								const id = m.id ?? m.movie_id;
+								if (!id) return null;
+								return (
+									<li
+										key={id}
+										className="flex items-center justify-between"
+									>
+										<span>{m.title || `Movie ${id}`}</span>
+										<button
+											type="button"
+											onClick={() => handleDeleteMovie(id)}
+											disabled={movieDeleteLoadingId === id}
+											className="px-2 py-0.5 rounded-md border border-red-300 text-red-700 text-xs disabled:text-gray-500 disabled:border-gray-300"
+										>
+											{movieDeleteLoadingId === id ? "Deleting…" : "Delete"}
+										</button>
+									</li>
+								);
+							})}
+						</ul>
+					</div>
 				)}
 			</section>
 
