@@ -1,13 +1,22 @@
 import { Link } from "react-router-dom";
+import Navbar from "../components/layout/Navbar";
+import PageWrapper from "../components/layout/PageWrapper";
+import Button from "../components/ui/Button";
 
 export default function NotFound() {
 	return (
-		<div className="p-6 space-y-3">
-			<h1 className="text-xl font-semibold">Page not found</h1>
-			<p className="text-sm text-gray-600">The page you requested does not exist.</p>
-			<Link className="text-blue-600 underline" to="/">
-				Go back home
-			</Link>
-		</div>
+		<>
+			<Navbar />
+			<PageWrapper title="Page not found" subtitle="The resource you requested does not exist.">
+				<section className="rounded-lg border border-border bg-surface p-6 space-y-4">
+					<p className="text-sm text-textSecondary">
+						Double-check the URL or jump back to the movie catalog.
+					</p>
+					<Button as={Link} to="/">
+						Go back home
+					</Button>
+				</section>
+			</PageWrapper>
+		</>
 	);
 }

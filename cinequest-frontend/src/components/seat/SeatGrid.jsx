@@ -2,10 +2,15 @@ import Seat from "./Seat";
 
 export default function SeatGrid({ groupedSeats, selectedSeats, onToggle }) {
 	return (
-		<div className="space-y-4">
+		<div className="space-y-6">
 			{Object.entries(groupedSeats).map(([row, seats]) => (
-				<div key={row} className="space-y-2">
-					<div className="text-sm font-semibold text-gray-700">Row {row}</div>
+				<div key={row} className="space-y-3">
+					<div className="flex items-center gap-3">
+						<span className="text-xs font-semibold uppercase tracking-wide text-textSecondary">
+							Row {row}
+						</span>
+						<span className="h-px flex-1 bg-border" aria-hidden />
+					</div>
 					<div className="flex flex-wrap gap-2">
 						{seats.map((seat) => (
 							<Seat
@@ -13,7 +18,6 @@ export default function SeatGrid({ groupedSeats, selectedSeats, onToggle }) {
 								seat={seat}
 								isSelected={selectedSeats.includes(seat.seat_id)}
 								onToggle={onToggle}
-								disabled={seat?.is_available === false || seat?.available === false}
 							/>
 						))}
 					</div>

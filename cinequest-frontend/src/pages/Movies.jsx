@@ -1,6 +1,7 @@
 import MovieCard from "../components/movie/MovieCard";
 import { useMovies } from "../hooks/useMovies";
 import Navbar from "../components/layout/Navbar";
+import PageWrapper from "../components/layout/PageWrapper";
 
 export default function Movies() {
   const { movies, loading, error } = useMovies();
@@ -8,32 +9,30 @@ export default function Movies() {
   return (
     <>
       <Navbar />
-      <div className="p-6 space-y-4">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold">Now Showing</h1>
-        <p className="text-sm text-gray-600">
-          Browse movies and pick a show to continue.
-        </p>
-      </header>
+      <PageWrapper
+        title="Now Showing"
+        subtitle="Browse the catalog and jump into a show."
+      >
+        <div className="space-y-4">
+          {loading && <p className="text-sm text-textSecondary">Loading movies…</p>}
 
-      {loading && <p className="text-sm text-gray-600">Loading movies…</p>}
+          {error && (
+            <p className="text-sm text-danger">Failed to load movies. Please try again.</p>
+          )}
 
-      {error && (
-        <p className="text-sm text-red-600">Failed to load movies. Please try again.</p>
-      )}
+          {!loading && !error && movies.length === 0 && (
+            <p className="text-sm text-textSecondary">No movies available.</p>
+          )}
 
-      {!loading && !error && movies.length === 0 && (
-        <p className="text-sm text-gray-600">No movies available.</p>
-      )}
-
-      {!loading && !error && movies.length > 0 && (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {movies.map((movie) => (
-            <MovieCard key={movie.id ?? movie.title} movie={movie} />
-          ))}
+          {!loading && !error && movies.length > 0 && (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {movies.map((movie) => (
+                <MovieCard key={movie.id ?? movie.title} movie={movie} />
+              ))}
+            </div>
+          )}
         </div>
-      )}
-      </div>
+      </PageWrapper>
     </>
   );
 }

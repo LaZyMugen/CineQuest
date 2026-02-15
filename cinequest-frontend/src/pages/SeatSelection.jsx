@@ -3,6 +3,10 @@ import { useParams } from "react-router-dom";
 import SeatGrid from "../components/seat/SeatGrid";
 import { useSeats } from "../hooks/useSeats";
 import { bookSeats, confirmBooking } from "../lib/api";
+import Navbar from "../components/layout/Navbar";
+import PageWrapper from "../components/layout/PageWrapper";
+import Button from "../components/ui/Button";
+import StatusBadge from "../components/ui/StatusBadge";
 
 export default function SeatSelection() {
   const { id: showId } = useParams();
@@ -93,92 +97,138 @@ export default function SeatSelection() {
   };
 
   return (
-    <div className="p-6 space-y-4">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold">Select Seats</h1>
-        <p className="text-sm text-gray-600">Show ID: {showId}</p>
-      </header>
+    <>
+      <Navbar />
+      <PageWrapper
+        title="Select Seats"
+        subtitle={`Show #${showId}`}
+      >
+        <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
+          <section className="rounded-lg border border-border bg-surface p-6 space-y-6">
+            {loading && <p className="text-sm text-textSecondary">Loading seats…</p>}
 
-      {loading && <p className="text-sm text-gray-600">Loading seats…</p>}
+            {error && (
+              <p className="text-sm text-danger">
+                Failed to load seats. Please try again.
+              </p>
+            )}
 
-      {error && (
-        <p className="text-sm text-red-600">
-          Failed to load seats. Please try again.
-        </p>
-      )}
+            {!loading && !error && seats.length === 0 && (
+              <p className="text-sm text-textSecondary">
+                No seats available for this show.
+              </p>
+            )}
 
-      {!loading && !error && seats.length === 0 && (
-        <p className="text-sm text-gray-600">
-          No seats available for this show.
-        </p>
-      )}
+            {!loading && !error && seats.length > 0 && (
+              <>
+                <SeatGrid
+                  groupedSeats={groupedSeats}
+                  selectedSeats={selectedSeats}
+                  onToggle={handleToggleSeat}
+                />
+                <SeatLegend />
+              </>
+            )}
+          </section>
 
-      {!loading && !error && seats.length > 0 && (
-        <SeatGrid
-          groupedSeats={groupedSeats}
-          selectedSeats={selectedSeats}
-          onToggle={handleToggleSeat}
-        />
-      )}
-
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          onClick={handleBookSeats}
-          disabled={
-            bookingLoading || selectedSeats.length === 0 || loading
-          }
-          className="px-4 py-2 rounded-md bg-blue-600 text-white font-semibold disabled:bg-gray-300 disabled:text-gray-600"
-        >
-          {bookingLoading ? "Booking…" : "Book Seats"}
-        </button>
-
-        {bookingError && (
-          <span className="text-sm text-red-600">{bookingError}</span>
-        )}
-      </div>
-
-      {booking && (
-        <div className="rounded-md border border-green-200 bg-green-50 p-3 text-sm text-green-800">
-          <div className="font-semibold">
-            Booking {isConfirmed ? "Confirmed" : "Successful"}
-          </div>
-          <div>Booking ID: {booking.booking_id}</div>
-          <div>Total cost: {booking.total_cost}</div>
-
-          {/* Confirm button is only relevant while lock is active */}
-          {(!booking.expires_at ||
-            (booking.status === "LOCKED" &&
-              new Date(booking.expires_at) >= new Date())) && (
-            <div className="mt-3 flex items-center gap-3">
-              <button
-                type="button"
-                onClick={handleConfirmBooking}
-                disabled={
-                  confirmLoading || isConfirmed || !booking.booking_id
-                }
-                className="px-3 py-1.5 rounded-md bg-emerald-600 text-white text-sm font-semibold disabled:bg-gray-300 disabled:text-gray-600"
+          <aside className="space-y-4">
+            <section className="rounded-lg border border-border bg-surface p-5 space-y-4">
+              <div>
+                <h2 className="text-base font-semibold">Selection</h2>
+                <p className="text-sm text-textSecondary">
+                  Pick available seats to lock them for confirmation.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2 text-sm">
+                {selectedSeats.length > 0 ? (
+                  selectedSeats.map((seatId) => (
+                    <span
+                      key={seatId}
+                      className="rounded-sm border border-border bg-elevated px-2 py-0.5 text-textPrimary"
+                    >
+                      {seatId}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-textSecondary">No seats selected yet.</span>
+                )}
+              </div>
+              <Button
+                onClick={handleBookSeats}
+                disabled={bookingLoading || selectedSeats.length === 0 || loading}
               >
-                {isConfirmed
-                  ? "Booking Confirmed"
-                  : confirmLoading
-                  ? "Confirming…"
-                  : "Confirm Booking"}
-              </button>
+                {bookingLoading ? "Booking…" : "Book Seats"}
+              </Button>
+              {bookingError && <p className="text-sm text-danger">{bookingError}</p>}
+            </section>
 
-              {confirmError && (
-                <span className="text-xs text-red-600">{confirmError}</span>
-              )}
-            </div>
-          )}
-        </div>
-      )}
+            {booking && (
+              <section className="rounded-lg border border-border bg-surface p-5 space-y-3 text-sm">
+                <div className="flex items-center gap-3">
+                  <h2 className="text-base font-semibold text-textPrimary">Booking</h2>
+                  <StatusBadge status={isConfirmed ? "CONFIRMED" : booking.status} />
+                </div>
+                <p className="text-textSecondary">
+                  Booking ID: <span className="text-textPrimary">{booking.booking_id}</span>
+                </p>
+                <p className="text-textSecondary">
+                  Total cost: <span className="text-textPrimary">{booking.total_cost ?? "-"}</span>
+                </p>
+                {booking.expires_at && (
+                  <p className="text-textSecondary">
+                    Lock expires at {new Date(booking.expires_at).toLocaleTimeString()}
+                  </p>
+                )}
 
-      {selectedSeats.length > 0 && (
-        <div className="text-sm text-gray-800">
-          Selected seats: {selectedSeats.join(", ")}
+                {(!booking.expires_at ||
+                  (booking.status === "LOCKED" &&
+                    new Date(booking.expires_at) >= new Date())) && (
+                  <div className="space-y-2">
+                    <Button
+                      variant="secondary"
+                      onClick={handleConfirmBooking}
+                      disabled={
+                        confirmLoading || isConfirmed || !booking.booking_id
+                      }
+                    >
+                      {isConfirmed
+                        ? "Booking Confirmed"
+                        : confirmLoading
+                        ? "Confirming…"
+                        : "Confirm Booking"}
+                    </Button>
+                    {confirmError && (
+                      <p className="text-xs text-danger">{confirmError}</p>
+                    )}
+                  </div>
+                )}
+              </section>
+            )}
+          </aside>
         </div>
-      )}
+      </PageWrapper>
+    </>
+  );
+}
+
+function SeatLegend() {
+  return (
+    <div className="text-xs text-textSecondary">
+      <div className="flex flex-wrap gap-3">
+        <LegendItem colorClass="bg-elevated border-border" label="Available" />
+        <LegendItem colorClass="bg-accent border-accent" label="Selected" />
+        <LegendItem colorClass="bg-[#5A1E1E] border-[#7F2D2D]" label="Locked" />
+        <LegendItem colorClass="bg-[#14532D] border-[#1E8E46]" label="Confirmed" />
+      </div>
     </div>
+  );
+}
+
+function LegendItem({ colorClass, label }) {
+  return (
+    <span className="inline-flex items-center gap-2">
+      <span className={`inline-block h-4 w-4 rounded-sm border ${colorClass}`} aria-hidden />
+      {label}
+    </span>
   );
 }

@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useBookings } from "../hooks/useBookings";
+import Navbar from "../components/layout/Navbar";
+import PageWrapper from "../components/layout/PageWrapper";
+import Button from "../components/ui/Button";
+import StatusBadge from "../components/ui/StatusBadge";
 
 const USER_ID = 1; // temporary hardcoded
 
@@ -53,48 +57,59 @@ export default function MyBookings() {
   );
 
   return (
-    <div className="p-6 space-y-4">
-      <header className="space-y-1">
-        <h1 className="text-2xl font-semibold">My Bookings</h1>
-        <p className="text-sm text-gray-600">
-          Bookings for user #{USER_ID}
-        </p>
-      </header>
+    <>
+      <Navbar />
+      <PageWrapper
+        title="My Bookings"
+        subtitle={`Bookings for user #${USER_ID}`}
+        actions={
+          <Button variant="secondary" size="sm" onClick={() => setRefreshKey((k) => k + 1)}>
+            Refresh
+          </Button>
+        }
+      >
+        <div className="space-y-4">
+          {loading && <p className="text-sm text-textSecondary">Loading bookings…</p>}
 
-      <div className="flex items-center gap-3 text-sm">
-        <button
-          type="button"
-          onClick={() => setRefreshKey((k) => k + 1)}
-          className="px-3 py-1.5 rounded-md border border-gray-300 text-gray-800 hover:bg-gray-50"
-        >
-          Refresh
-        </button>
-      </div>
+          {error && (
+            <p className="text-sm text-danger">
+              Failed to load bookings. Please try again.
+            </p>
+          )}
 
-      {loading && <p className="text-sm text-gray-600">Loading bookings…</p>}
+          {!loading && !error && normalized.length === 0 && (
+            <p className="text-sm text-textSecondary">You have no bookings yet.</p>
+          )}
 
-      {error && (
-        <p className="text-sm text-red-600">
-          Failed to load bookings. Please try again.
-        </p>
-      )}
-
-      {!loading && !error && normalized.length === 0 && (
-        <p className="text-sm text-gray-600">You have no bookings yet.</p>
-      )}
-
-      {!loading && !error && normalized.length > 0 && (
-        <div className="space-y-3">
-          {normalized.map((b) => (
-            <BookingRow
-              key={b.id}
-              booking={b}
-              onExpired={() => setRefreshKey((k) => k + 1)}
-            />
-          ))}
+          {!loading && !error && normalized.length > 0 && (
+            <div className="overflow-x-auto rounded-lg border border-border bg-surface">
+              <table className="w-full text-sm">
+                <thead className="bg-background/70 text-left text-xs font-semibold uppercase tracking-wide text-textSecondary">
+                  <tr>
+                    <th className="px-4 py-3">Booking</th>
+                    <th className="px-4 py-3">Movie</th>
+                    <th className="px-4 py-3">Show Time</th>
+                    <th className="px-4 py-3">Seats</th>
+                    <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3">Lock</th>
+                    <th className="px-4 py-3">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {normalized.map((booking) => (
+                    <BookingRow
+                      key={booking.id}
+                      booking={booking}
+                      onExpired={() => setRefreshKey((k) => k + 1)}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
-      )}
-    </div>
+      </PageWrapper>
+    </>
   );
 }
 
@@ -117,61 +132,45 @@ function BookingRow({ booking, onExpired }) {
   const statusLabel = (() => {
     if (booking.status === "CONFIRMED") return "CONFIRMED";
     if (isExpired) return "EXPIRED";
-    if (isLocked) return "LOCKED (active)";
+    if (isLocked) return "LOCKED";
     return booking.status;
   })();
 
   return (
-    <div className="border rounded-md p-3 text-sm bg-white flex flex-col gap-1">
-      <div className="flex justify-between items-center">
-        <span className="font-semibold">Booking #{booking.id}</span>
-        <span
-          className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-            booking.status === "CONFIRMED"
-              ? "bg-emerald-100 text-emerald-800"
-              : "bg-yellow-100 text-yellow-800"
-          }`}
-        >
-          {statusLabel}
-        </span>
-      </div>
-
-      <div>
-        <span className="font-medium">Movie:</span> {booking.movie_title || "-"}
-      </div>
-      <div>
-        <span className="font-medium">Show time:</span> {formatDateTime(booking.show_time)}
-      </div>
-      <div>
-        <span className="font-medium">Seats:</span>{" "}
+    <tr className="hover:bg-elevated">
+      <td className="px-4 py-3 text-textPrimary">#{booking.id}</td>
+      <td className="px-4 py-3 text-textSecondary">
+        {booking.movie_title || "-"}
+      </td>
+      <td className="px-4 py-3 text-textSecondary">
+        {formatDateTime(booking.show_time)}
+      </td>
+      <td className="px-4 py-3 text-textSecondary">
         {booking.seats.length ? booking.seats.join(", ") : "-"}
-      </div>
-      <div>
-        <span className="font-medium">Expiry:</span>{" "}
-        {booking.expires_at ? formatDateTime(booking.expires_at) : "-"}
-      </div>
-
-      {isLocked && !isExpired && (
-        <div className="mt-1 text-xs text-gray-700">
-          {typeof secondsLeft === "number" && secondsLeft > 0 ? (
-            <span>Expires in {secondsLeft}s</span>
-          ) : (
-            <span>Lock expiring…</span>
-          )}
-        </div>
-      )}
-
-      {isExpired && booking.show?.show_id && (
-        <div className="mt-2">
-          <button
-            type="button"
+      </td>
+      <td className="px-4 py-3">
+        <StatusBadge status={statusLabel} />
+      </td>
+      <td className="px-4 py-3 text-textSecondary">
+        {isLocked && !isExpired ? (
+          secondsLeft > 0 ? `${secondsLeft}s left` : "Locking…"
+        ) : (
+          isExpired ? "Expired" : "—"
+        )}
+      </td>
+      <td className="px-4 py-3">
+        {isExpired && booking.show?.show_id ? (
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={() => navigate(`/show/${booking.show.show_id}/seats`)}
-            className="px-3 py-1.5 rounded-md bg-blue-600 text-white text-xs font-semibold"
           >
             Re-book
-          </button>
-        </div>
-      )}
-    </div>
+          </Button>
+        ) : (
+          <span className="text-textSecondary">—</span>
+        )}
+      </td>
+    </tr>
   );
 }

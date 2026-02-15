@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { fetchShowsForMovie } from "../lib/api";
+import Navbar from "../components/layout/Navbar";
+import PageWrapper from "../components/layout/PageWrapper";
+import ShowCard from "../components/show/ShowCard";
 
 export default function Shows() {
 	const { id: movieId } = useParams();
@@ -41,64 +44,36 @@ export default function Shows() {
 	}, [movieId]);
 
 	return (
-		<div className="p-6 space-y-4">
-			<header className="space-y-1">
-				<h1 className="text-xl font-semibold">Shows</h1>
-				<p className="text-sm text-gray-600">Movie ID: {movieId}</p>
-			</header>
+		<>
+			<Navbar />
+			<PageWrapper
+				title="Shows"
+				subtitle={`Movie ID: ${movieId}`}
+			>
+				<div className="space-y-4">
+					{loading && (
+						<p className="text-sm text-textSecondary">Loading shows…</p>
+					)}
 
-			{loading && (
-				<p className="text-sm text-gray-600">Loading shows…</p>
-			)}
+					{error && (
+						<p className="text-sm text-danger">
+							Failed to load shows. Please try again.
+						</p>
+					)}
 
-			{error && (
-				<p className="text-sm text-red-600">
-					Failed to load shows. Please try again.
-				</p>
-			)}
+					{!loading && !error && shows.length === 0 && (
+						<p className="text-sm text-textSecondary">No shows available.</p>
+					)}
 
-			{!loading && !error && shows.length === 0 && (
-				<p className="text-sm text-gray-600">No shows available.</p>
-			)}
-
-			{!loading && !error && shows.length > 0 && (
-				<div className="space-y-3">
-					{shows.map((show) => {
-						const showId = show.show_id ?? show.id;
-						const timeLabel = show.show_time
-							? new Date(show.show_time).toLocaleString()
-							: "-";
-						const priceLabel =
-							show.price !== undefined && show.price !== null
-								? `₹${show.price}`
-								: "-";
-
-						return (
-							<div
-								key={showId}
-								className="border rounded-md p-3 bg-white flex items-center justify-between text-sm"
-							>
-								<div>
-									<div>
-										<span className="font-medium">Time:</span> {timeLabel}
-									</div>
-									<div>
-										<span className="font-medium">Price:</span> {priceLabel}
-									</div>
-								</div>
-								{showId && (
-									<Link
-										to={`/show/${showId}/seats`}
-										className="px-3 py-1.5 rounded-md bg-blue-600 text-white text-xs font-semibold"
-									>
-										Select Seats
-									</Link>
-								)}
-							</div>
-						);
-					})}
+					{!loading && !error && shows.length > 0 && (
+						<div className="grid gap-5">
+							{shows.map((show) => (
+								<ShowCard key={show.show_id ?? show.id} show={show} />
+							))}
+						</div>
+					)}
 				</div>
-			)}
-		</div>
+			</PageWrapper>
+		</>
 	);
 }

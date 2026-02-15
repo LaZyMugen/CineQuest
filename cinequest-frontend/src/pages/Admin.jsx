@@ -9,6 +9,10 @@ import {
 	fetchShowsForMovie,
 	deleteMovie,
 } from "../lib/api";
+import Navbar from "../components/layout/Navbar";
+import PageWrapper from "../components/layout/PageWrapper";
+import Button from "../components/ui/Button";
+import StatusBadge from "../components/ui/StatusBadge";
 
 export default function Admin() {
 	const [movies, setMovies] = useState([]);
@@ -202,243 +206,236 @@ export default function Admin() {
 	}
 
 	return (
-		<div className="p-6 space-y-8">
-			<header className="space-y-1">
-				<h1 className="text-2xl font-semibold">Admin Dashboard</h1>
-				<p className="text-sm text-gray-600">
-					Manage movies, shows, and view all bookings.
-				</p>
-			</header>
-
-			{/* Section 1: Add Movie */}
-			<section className="space-y-3 border rounded-md p-4 bg-white">
-				<h2 className="text-lg font-semibold">Add Movie</h2>
-				<form onSubmit={handleAddMovie} className="space-y-3 text-sm">
-					<div className="flex flex-col gap-1">
-						<label className="font-medium">Title</label>
-						<input
-							type="text"
-							value={movieTitle}
-							onChange={(e) => setMovieTitle(e.target.value)}
-							className="border rounded-md px-2 py-1"
-						/>
-					</div>
-					<div className="flex flex-col gap-1">
-						<label className="font-medium">Duration (minutes)</label>
-						<input
-							type="number"
-							min="0"
-							value={movieDuration}
-							onChange={(e) => setMovieDuration(e.target.value)}
-							className="border rounded-md px-2 py-1"
-						/>
-					</div>
-					<div className="flex flex-col gap-1">
-						<label className="font-medium">Language</label>
-						<input
-							type="text"
-							value={movieLanguage}
-							onChange={(e) => setMovieLanguage(e.target.value)}
-							className="border rounded-md px-2 py-1"
-						/>
-					</div>
-					<div className="flex items-center gap-3">
-						<button
-							type="submit"
-							disabled={movieSubmitting}
-							className="px-3 py-1.5 rounded-md bg-blue-600 text-white text-sm font-semibold disabled:bg-gray-300 disabled:text-gray-600"
-						>
-							{movieSubmitting ? "Saving…" : "Add Movie"}
-						</button>
-						{movieFormError && (
-							<span className="text-xs text-red-600">{movieFormError}</span>
-						)}
-						{movieMessage && (
-							<span className="text-xs text-green-700">{movieMessage}</span>
-						)}
-					</div>
-				</form>
-				{moviesLoading && (
-					<p className="text-xs text-gray-500">Loading movies…</p>
-				)}
-				{moviesError && (
-					<p className="text-xs text-red-600">{moviesError}</p>
-				)}
-				{movieDeleteError && (
-					<p className="text-xs text-red-600">{movieDeleteError}</p>
-				)}
-				{!moviesLoading && !moviesError && movies.length > 0 && (
-					<div className="mt-3 border-t pt-3 text-sm">
-						<h3 className="font-semibold mb-2">Existing Movies</h3>
-						<ul className="space-y-1">
-							{movies.map((m) => {
-								const id = m.id ?? m.movie_id;
-								if (!id) return null;
-								return (
-									<li
-										key={id}
-										className="flex items-center justify-between"
-									>
-										<span>{m.title || `Movie ${id}`}</span>
-										<button
-											type="button"
-											onClick={() => handleDeleteMovie(id)}
-											disabled={movieDeleteLoadingId === id}
-											className="px-2 py-0.5 rounded-md border border-red-300 text-red-700 text-xs disabled:text-gray-500 disabled:border-gray-300"
-										>
-											{movieDeleteLoadingId === id ? "Deleting…" : "Delete"}
-										</button>
-									</li>
-								);
-							})}
-						</ul>
-					</div>
-				)}
-			</section>
-
-			{/* Section 2: Add Show */}
-			<section className="space-y-3 border rounded-md p-4 bg-white">
-				<h2 className="text-lg font-semibold">Add Show</h2>
-				<form onSubmit={handleAddShow} className="space-y-3 text-sm">
-					<div className="flex flex-col gap-1">
-						<label className="font-medium">Movie</label>
-						<select
-							value={showMovieId}
-							onChange={(e) => setShowMovieId(e.target.value)}
-							className="border rounded-md px-2 py-1"
-						>
-							<option value="">Select movie</option>
-							{movies.map((m) => {
-								const id = m.id ?? m.movie_id;
-								return (
-									<option key={id} value={id}>
-										{m.title}
-									</option>
-								);
-							})}
-						</select>
-					</div>
-					<div className="flex flex-col gap-1">
-						<label className="font-medium">Screen</label>
-						<select
-							value={showScreenId}
-							onChange={(e) => setShowScreenId(e.target.value)}
-							className="border rounded-md px-2 py-1"
-						>
-							<option value="">Select screen</option>
-							{screens.map((s) => {
-								const id = s.id ?? s.screen_id;
-								const label =
-									s.name || s.label || `Screen ${id}`;
-								return (
-									<option key={id} value={id}>
-										{label}
-									</option>
-								);
-							})}
-						</select>
-					</div>
-					<div className="flex flex-col gap-1">
-						<label className="font-medium">Show time</label>
-						<input
-							type="datetime-local"
-							value={showTime}
-							onChange={(e) => setShowTime(e.target.value)}
-							className="border rounded-md px-2 py-1"
-						/>
-					</div>
-					<div className="flex flex-col gap-1">
-						<label className="font-medium">Price</label>
-						<input
-							type="number"
-							min="0"
-							step="0.01"
-							value={showPrice}
-							onChange={(e) => setShowPrice(e.target.value)}
-							className="border rounded-md px-2 py-1"
-						/>
-					</div>
-					<div className="flex items-center gap-3">
-						<button
-							type="submit"
-							disabled={showSubmitting}
-							className="px-3 py-1.5 rounded-md bg-blue-600 text-white text-sm font-semibold disabled:bg-gray-300 disabled:text-gray-600"
-						>
-							{showSubmitting ? "Saving…" : "Add Show"}
-						</button>
-						{showFormError && (
-							<span className="text-xs text-red-600">{showFormError}</span>
-						)}
-						{showMessage && (
-							<span className="text-xs text-green-700">{showMessage}</span>
-						)}
-					</div>
-				</form>
-				{screensLoading && (
-					<p className="text-xs text-gray-500">Loading screens…</p>
-				)}
-				{screensError && (
-					<p className="text-xs text-red-600">{screensError}</p>
-				)}
-			</section>
-
-			{/* Section 3: All Bookings */}
-			<section className="space-y-3 border rounded-md p-4 bg-white">
-				<h2 className="text-lg font-semibold">All Bookings</h2>
-				{bookingsLoading && (
-					<p className="text-sm text-gray-600">Loading bookings…</p>
-				)}
-				{bookingsError && (
-					<p className="text-sm text-red-600">{bookingsError}</p>
-				)}
-				{cancelError && !bookingsError && (
-					<p className="text-xs text-red-600">{cancelError}</p>
-				)}
-				{!bookingsLoading && !bookingsError && bookings.length === 0 && (
-					<p className="text-sm text-gray-600">No bookings yet.</p>
-				)}
-				{!bookingsLoading && !bookingsError && bookings.length > 0 && (
-					<div className="overflow-x-auto text-sm">
-						<table className="min-w-full border text-left text-xs">
-							<thead className="bg-gray-50">
-								<tr>
-									<th className="border-b px-2 py-1">Booking ID</th>
-									<th className="border-b px-2 py-1">Movie</th>
-									<th className="border-b px-2 py-1">Show time</th>
-									<th className="border-b px-2 py-1">Seats</th>
-									<th className="border-b px-2 py-1">Status</th>
-									<th className="border-b px-2 py-1">Actions</th>
-								</tr>
-							</thead>
-							<tbody>
-								{bookings.map((b) => (
-									<tr key={b.booking_id} className="odd:bg-white even:bg-gray-50">
-										<td className="border-b px-2 py-1">{b.booking_id}</td>
-										<td className="border-b px-2 py-1">{b.movie_title || "-"}</td>
-										<td className="border-b px-2 py-1">
-											{b.show_time ? new Date(b.show_time).toLocaleString() : "-"}
-										</td>
-										<td className="border-b px-2 py-1">
-											{b.seat_ids.length ? b.seat_ids.join(", ") : "-"}
-										</td>
-										<td className="border-b px-2 py-1">{b.status}</td>
-										<td className="border-b px-2 py-1">
-											<button
-												type="button"
-												onClick={() => handleCancelBooking(b.booking_id)}
-												disabled={cancelLoadingId === b.booking_id}
-												className="px-2 py-0.5 rounded-md border border-red-300 text-red-700 disabled:text-gray-500 disabled:border-gray-300"
+		<>
+			<Navbar />
+			<PageWrapper
+				title="Admin Dashboard"
+				subtitle="Manage movies, shows, and system-wide bookings."
+			>
+				<div className="space-y-8">
+					<section className="rounded-lg border border-border bg-surface p-6 space-y-5">
+						<header>
+							<h2 className="text-lg font-semibold text-textPrimary">Add Movie</h2>
+							<p className="text-sm text-textSecondary">Create a title that can be scheduled across screens.</p>
+						</header>
+						<form onSubmit={handleAddMovie} className="space-y-4 text-sm">
+							<div className="space-y-2">
+								<label htmlFor="movie-title">Title</label>
+								<input
+									id="movie-title"
+									type="text"
+									value={movieTitle}
+									onChange={(e) => setMovieTitle(e.target.value)}
+									className="w-full"
+								/>
+							</div>
+							<div className="grid gap-4 sm:grid-cols-2">
+								<div className="space-y-2">
+									<label htmlFor="movie-duration">Duration (minutes)</label>
+									<input
+										id="movie-duration"
+										type="number"
+										min="0"
+										value={movieDuration}
+										onChange={(e) => setMovieDuration(e.target.value)}
+										className="w-full"
+									/>
+								</div>
+								<div className="space-y-2">
+									<label htmlFor="movie-language">Language</label>
+									<input
+										id="movie-language"
+										type="text"
+										value={movieLanguage}
+										onChange={(e) => setMovieLanguage(e.target.value)}
+										className="w-full"
+									/>
+								</div>
+							</div>
+							<div className="flex flex-wrap items-center gap-3">
+								<Button type="submit" disabled={movieSubmitting}>
+									{movieSubmitting ? "Saving…" : "Add Movie"}
+								</Button>
+								{movieFormError && (
+									<span className="text-xs text-danger">{movieFormError}</span>
+								)}
+								{movieMessage && (
+									<span className="text-xs text-success">{movieMessage}</span>
+								)}
+							</div>
+						</form>
+						{moviesLoading && <p className="text-xs text-textSecondary">Loading movies…</p>}
+						{moviesError && <p className="text-xs text-danger">{moviesError}</p>}
+						{movieDeleteError && <p className="text-xs text-danger">{movieDeleteError}</p>}
+						{!moviesLoading && !moviesError && movies.length > 0 && (
+							<div className="border-t border-border pt-4 text-sm">
+								<h3 className="text-xs font-semibold uppercase tracking-wide text-textSecondary">Existing Movies</h3>
+								<ul className="mt-3 space-y-2">
+									{movies.map((m) => {
+										const id = m.id ?? m.movie_id;
+										if (!id) return null;
+										return (
+											<li
+												key={id}
+												className="flex items-center justify-between rounded-md border border-border bg-elevated px-3 py-2"
 											>
-												{cancelLoadingId === b.booking_id ? "Cancelling…" : "Cancel"}
-											</button>
-										</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
-					</div>
-				)}
-			</section>
-		</div>
+												<span className="text-textPrimary">{m.title || `Movie ${id}`}</span>
+												<Button
+													variant="danger"
+													size="sm"
+													onClick={() => handleDeleteMovie(id)}
+													disabled={movieDeleteLoadingId === id}
+												>
+													{movieDeleteLoadingId === id ? "Deleting…" : "Delete"}
+												</Button>
+											</li>
+										);
+									})}
+								</ul>
+							</div>
+						)}
+					</section>
+
+					<section className="rounded-lg border border-border bg-surface p-6 space-y-5">
+						<header>
+							<h2 className="text-lg font-semibold text-textPrimary">Add Show</h2>
+							<p className="text-sm text-textSecondary">Schedule a show by pairing a movie, screen, and time.</p>
+						</header>
+						<form onSubmit={handleAddShow} className="space-y-4 text-sm">
+							<div className="grid gap-4 sm:grid-cols-2">
+								<div className="space-y-2">
+									<label htmlFor="show-movie">Movie</label>
+									<select
+										id="show-movie"
+										value={showMovieId}
+										onChange={(e) => setShowMovieId(e.target.value)}
+										className="w-full"
+									>
+										<option value="">Select movie</option>
+										{movies.map((m) => {
+											const id = m.id ?? m.movie_id;
+											return (
+												<option key={id} value={id}>
+													{m.title}
+												</option>
+											);
+										})}
+									</select>
+								</div>
+								<div className="space-y-2">
+									<label htmlFor="show-screen">Screen</label>
+									<select
+										id="show-screen"
+										value={showScreenId}
+										onChange={(e) => setShowScreenId(e.target.value)}
+										className="w-full"
+									>
+										<option value="">Select screen</option>
+										{screens.map((s) => {
+											const id = s.id ?? s.screen_id;
+											const label = s.name || s.label || `Screen ${id}`;
+											return (
+												<option key={id} value={id}>
+													{label}
+												</option>
+											);
+										})}
+									</select>
+								</div>
+							</div>
+							<div className="grid gap-4 sm:grid-cols-2">
+								<div className="space-y-2">
+									<label htmlFor="show-time">Show time</label>
+									<input
+										id="show-time"
+										type="datetime-local"
+										value={showTime}
+										onChange={(e) => setShowTime(e.target.value)}
+										className="w-full"
+									/>
+								</div>
+								<div className="space-y-2">
+									<label htmlFor="show-price">Price</label>
+									<input
+										id="show-price"
+										type="number"
+										min="0"
+										step="0.01"
+										value={showPrice}
+										onChange={(e) => setShowPrice(e.target.value)}
+										className="w-full"
+									/>
+								</div>
+							</div>
+							<div className="flex flex-wrap items-center gap-3">
+								<Button type="submit" disabled={showSubmitting}>
+									{showSubmitting ? "Saving…" : "Add Show"}
+								</Button>
+								{showFormError && <span className="text-xs text-danger">{showFormError}</span>}
+								{showMessage && <span className="text-xs text-success">{showMessage}</span>}
+							</div>
+						</form>
+						{screensLoading && <p className="text-xs text-textSecondary">Loading screens…</p>}
+						{screensError && <p className="text-xs text-danger">{screensError}</p>}
+					</section>
+
+					<section className="rounded-lg border border-border bg-surface p-6 space-y-5">
+						<header>
+							<h2 className="text-lg font-semibold text-textPrimary">All Bookings</h2>
+							<p className="text-sm text-textSecondary">Monitor bookings across every show.</p>
+						</header>
+						{bookingsLoading && <p className="text-sm text-textSecondary">Loading bookings…</p>}
+						{bookingsError && <p className="text-sm text-danger">{bookingsError}</p>}
+						{cancelError && !bookingsError && <p className="text-xs text-danger">{cancelError}</p>}
+						{!bookingsLoading && !bookingsError && bookings.length === 0 && (
+							<p className="text-sm text-textSecondary">No bookings yet.</p>
+						)}
+						{!bookingsLoading && !bookingsError && bookings.length > 0 && (
+							<div className="overflow-x-auto rounded-lg border border-border bg-surface">
+								<table className="min-w-full text-sm">
+									<thead className="bg-background/70 text-left text-xs font-semibold uppercase tracking-wide text-textSecondary">
+										<tr>
+											<th className="px-4 py-3">Booking</th>
+											<th className="px-4 py-3">Movie</th>
+											<th className="px-4 py-3">Show Time</th>
+											<th className="px-4 py-3">Seats</th>
+											<th className="px-4 py-3">Status</th>
+											<th className="px-4 py-3">Actions</th>
+										</tr>
+									</thead>
+									<tbody className="divide-y divide-border">
+										{bookings.map((b) => (
+											<tr key={b.booking_id} className="hover:bg-elevated">
+												<td className="px-4 py-3 text-textPrimary">#{b.booking_id}</td>
+												<td className="px-4 py-3 text-textSecondary">{b.movie_title || "-"}</td>
+												<td className="px-4 py-3 text-textSecondary">
+													{b.show_time ? new Date(b.show_time).toLocaleString() : "-"}
+												</td>
+												<td className="px-4 py-3 text-textSecondary">
+													{b.seat_ids.length ? b.seat_ids.join(", ") : "-"}
+												</td>
+												<td className="px-4 py-3">
+													<StatusBadge status={b.status} />
+												</td>
+												<td className="px-4 py-3">
+													<Button
+														variant="danger"
+														size="sm"
+														onClick={() => handleCancelBooking(b.booking_id)}
+														disabled={cancelLoadingId === b.booking_id}
+													>
+														{cancelLoadingId === b.booking_id ? "Cancelling…" : "Cancel"}
+													</Button>
+												</td>
+											</tr>
+										))}
+									</tbody>
+								</table>
+							</div>
+						)}
+					</section>
+				</div>
+			</PageWrapper>
+		</>
 	);
 }

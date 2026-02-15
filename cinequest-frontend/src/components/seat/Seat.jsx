@@ -1,18 +1,43 @@
+const baseClasses =
+	"w-11 h-11 rounded-md border text-sm font-semibold flex items-center justify-center transition-colors duration-150";
+
+const seatStateClasses = {
+	available: "bg-elevated text-textPrimary border-border hover:bg-accent hover:text-black",
+	selected: "bg-accent text-black border-accent",
+	locked: "bg-[#5A1E1E] text-textSecondary border-[#7F2D2D]",
+	confirmed: "bg-[#14532D] text-textPrimary border-[#1E8E46]",
+};
+
+function resolveStatus(seat) {
+	const rawStatus =
+		seat?.status || seat?.seat_status || seat?.booking_status || seat?.state;
+	if (!rawStatus) return null;
+	return rawStatus.toString().toUpperCase();
+}
+
 export default function Seat({ seat, isSelected, onToggle, disabled }) {
 	const label = seat?.seat_label || seat?.seat_number || seat?.seat_id;
-	const available = disabled ? false : seat?.is_available ?? seat?.available ?? true;
-	const canSelect = available && !disabled;
+	const status = resolveStatus(seat);
+	const available = seat?.is_available ?? seat?.available ?? status !== "LOCKED";
+	const isConfirmed = status === "CONFIRMED";
+	const isLocked = status === "LOCKED" || available === false;
+	const interactive = !disabled && !isLocked && !isConfirmed;
+	const seatState = isSelected
+		? "selected"
+		: isConfirmed
+		? "confirmed"
+		: isLocked
+		? "locked"
+		: "available";
+	const className = `${baseClasses} ${seatStateClasses[seatState]}`;
 
 	return (
 		<button
 			type="button"
-			onClick={() => canSelect && onToggle(seat?.seat_id)}
-			disabled={!canSelect}
-			className={`w-12 h-12 rounded-md text-sm font-medium transition-colors border
-			${!available ? "bg-gray-200 text-gray-500 border-gray-300" : ""}
-			${available && isSelected ? "bg-blue-600 text-white border-blue-700" : ""}
-			${available && !isSelected ? "bg-white text-gray-800 border-gray-300" : ""}
-			`}
+			onClick={() => interactive && onToggle(seat?.seat_id)}
+			disabled={!interactive}
+			aria-pressed={isSelected}
+			className={className}
 		>
 			{label}
 		</button>
