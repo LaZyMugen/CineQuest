@@ -213,10 +213,10 @@ export default function Admin() {
 				subtitle="Manage movies, shows, and system-wide bookings."
 			>
 				<div className="space-y-8">
-					<section className="rounded-lg border border-border bg-surface p-6 space-y-5">
+					<section className="rounded-lg border border-border bg-card p-6 space-y-5">
 						<header>
-							<h2 className="text-lg font-semibold text-textPrimary">Add Movie</h2>
-							<p className="text-sm text-textSecondary">Create a title that can be scheduled across screens.</p>
+							<h2 className="text-lg font-semibold text-gray-200">Add Movie</h2>
+							<p className="text-sm text-muted">Create a title that can be scheduled across screens.</p>
 						</header>
 						<form onSubmit={handleAddMovie} className="space-y-4 text-sm">
 							<div className="space-y-2">
@@ -264,12 +264,12 @@ export default function Admin() {
 								)}
 							</div>
 						</form>
-						{moviesLoading && <p className="text-xs text-textSecondary">Loading movies…</p>}
+						{moviesLoading && <p className="text-xs text-muted">Loading movies…</p>}
 						{moviesError && <p className="text-xs text-danger">{moviesError}</p>}
 						{movieDeleteError && <p className="text-xs text-danger">{movieDeleteError}</p>}
 						{!moviesLoading && !moviesError && movies.length > 0 && (
 							<div className="border-t border-border pt-4 text-sm">
-								<h3 className="text-xs font-semibold uppercase tracking-wide text-textSecondary">Existing Movies</h3>
+								<h3 className="text-xs font-semibold uppercase tracking-wide text-muted">Existing Movies</h3>
 								<ul className="mt-3 space-y-2">
 									{movies.map((m) => {
 										const id = m.id ?? m.movie_id;
@@ -277,9 +277,9 @@ export default function Admin() {
 										return (
 											<li
 												key={id}
-												className="flex items-center justify-between rounded-md border border-border bg-elevated px-3 py-2"
+												className="flex items-center justify-between rounded-md border border-border bg-card px-3 py-2"
 											>
-												<span className="text-textPrimary">{m.title || `Movie ${id}`}</span>
+												<span className="text-gray-200">{m.title || `Movie ${id}`}</span>
 												<Button
 													variant="danger"
 													size="sm"
@@ -296,10 +296,10 @@ export default function Admin() {
 						)}
 					</section>
 
-					<section className="rounded-lg border border-border bg-surface p-6 space-y-5">
+					<section className="rounded-lg border border-border bg-card p-6 space-y-5">
 						<header>
-							<h2 className="text-lg font-semibold text-textPrimary">Add Show</h2>
-							<p className="text-sm text-textSecondary">Schedule a show by pairing a movie, screen, and time.</p>
+							<h2 className="text-lg font-semibold text-gray-200">Add Show</h2>
+							<p className="text-sm text-muted">Schedule a show by pairing a movie, screen, and time.</p>
 						</header>
 						<form onSubmit={handleAddShow} className="space-y-4 text-sm">
 							<div className="grid gap-4 sm:grid-cols-2">
@@ -375,25 +375,25 @@ export default function Admin() {
 								{showMessage && <span className="text-xs text-success">{showMessage}</span>}
 							</div>
 						</form>
-						{screensLoading && <p className="text-xs text-textSecondary">Loading screens…</p>}
+						{screensLoading && <p className="text-xs text-muted">Loading screens…</p>}
 						{screensError && <p className="text-xs text-danger">{screensError}</p>}
 					</section>
 
-					<section className="rounded-lg border border-border bg-surface p-6 space-y-5">
+					<section className="rounded-lg border border-border bg-card p-6 space-y-5">
 						<header>
-							<h2 className="text-lg font-semibold text-textPrimary">All Bookings</h2>
-							<p className="text-sm text-textSecondary">Monitor bookings across every show.</p>
+							<h2 className="text-lg font-semibold text-gray-200">All Bookings</h2>
+							<p className="text-sm text-muted">Monitor bookings across every show.</p>
 						</header>
-						{bookingsLoading && <p className="text-sm text-textSecondary">Loading bookings…</p>}
+						{bookingsLoading && <p className="text-sm text-muted">Loading bookings…</p>}
 						{bookingsError && <p className="text-sm text-danger">{bookingsError}</p>}
 						{cancelError && !bookingsError && <p className="text-xs text-danger">{cancelError}</p>}
 						{!bookingsLoading && !bookingsError && bookings.length === 0 && (
-							<p className="text-sm text-textSecondary">No bookings yet.</p>
+							<p className="text-sm text-muted">No bookings yet.</p>
 						)}
 						{!bookingsLoading && !bookingsError && bookings.length > 0 && (
-							<div className="overflow-x-auto rounded-lg border border-border bg-surface">
+							<div className="overflow-x-auto rounded-lg border border-border bg-card">
 								<table className="min-w-full text-sm">
-									<thead className="bg-background/70 text-left text-xs font-semibold uppercase tracking-wide text-textSecondary">
+									<thead className="bg-bg/70 text-left text-xs font-semibold uppercase tracking-wide text-muted">
 										<tr>
 											<th className="px-4 py-3">Booking</th>
 											<th className="px-4 py-3">Movie</th>
@@ -403,15 +403,15 @@ export default function Admin() {
 											<th className="px-4 py-3">Actions</th>
 										</tr>
 									</thead>
-									<tbody className="divide-y divide-border">
+									<tbody className="divide-y divide-border text-gray-200">
 										{bookings.map((b) => (
-											<tr key={b.booking_id} className="hover:bg-elevated">
-												<td className="px-4 py-3 text-textPrimary">#{b.booking_id}</td>
-												<td className="px-4 py-3 text-textSecondary">{b.movie_title || "-"}</td>
-												<td className="px-4 py-3 text-textSecondary">
+											<tr key={b.booking_id} className="hover:bg-bg">
+												<td className="px-4 py-3 font-medium">#{b.booking_id}</td>
+												<td className="px-4 py-3 text-muted">{b.movie_title || "-"}</td>
+												<td className="px-4 py-3 text-muted">
 													{b.show_time ? new Date(b.show_time).toLocaleString() : "-"}
 												</td>
-												<td className="px-4 py-3 text-textSecondary">
+												<td className="px-4 py-3 text-muted">
 													{b.seat_ids.length ? b.seat_ids.join(", ") : "-"}
 												</td>
 												<td className="px-4 py-3">

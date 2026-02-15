@@ -6,7 +6,7 @@ export default function SeatGrid({ groupedSeats, selectedSeats, onToggle }) {
 			{Object.entries(groupedSeats).map(([row, seats]) => (
 				<div key={row} className="space-y-3">
 					<div className="flex items-center gap-3">
-						<span className="text-xs font-semibold uppercase tracking-wide text-textSecondary">
+						<span className="text-xs font-semibold uppercase tracking-wide text-muted">
 							Row {row}
 						</span>
 						<span className="h-px flex-1 bg-border" aria-hidden />

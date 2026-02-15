@@ -1,15 +1,15 @@
 import { Link, NavLink } from "react-router-dom";
 
-const linkBase = "text-sm font-medium transition-colors";
+const linkBase = "text-sm text-muted transition-colors";
 
 export default function Navbar() {
 	return (
-		<nav className="border-b border-border bg-background/95 text-textSecondary">
-			<div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-				<Link to="/" className="text-lg font-semibold text-textPrimary">
+		<nav className="border-b border-border bg-bg px-6 py-3">
+			<div className="mx-auto flex max-w-6xl items-center justify-between">
+				<Link to="/" className="text-lg font-semibold tracking-wide text-gray-200">
 					CineQuest
 				</Link>
-				<div className="flex items-center gap-6">
+				<div className="flex gap-6">
 					<NavItem to="/">Movies</NavItem>
 					<NavItem to="/my-bookings">My Bookings</NavItem>
 					<NavItem to="/admin">Admin</NavItem>
@@ -24,11 +24,7 @@ function NavItem({ to, children }) {
 		<NavLink
 			to={to}
 			className={({ isActive }) =>
-				`${linkBase} ${
-					isActive
-						? "text-accent"
-						: "text-textSecondary hover:text-textPrimary"
-				}`
+				`${linkBase} ${isActive ? "text-white" : "hover:text-white"}`
 			}
 		>
 			{children}

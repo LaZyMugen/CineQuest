@@ -17,28 +17,28 @@ export default function ShowCard({ show }) {
   const availableSeats = show?.available_seats ?? show?.seats_available;
 
   return (
-    <section className="rounded-lg border border-border bg-surface p-5">
+    <section className="rounded-lg border border-border bg-card p-5">
       <div className="flex flex-col gap-3">
         <div className="flex flex-wrap items-center gap-3">
-          <h3 className="text-base font-semibold text-textPrimary">{screenLabel}</h3>
+          <h3 className="text-base font-semibold text-gray-200">{screenLabel}</h3>
           {availableSeats !== undefined && (
-            <span className="text-xs text-textSecondary">
+            <span className="text-xs text-muted">
               {availableSeats} seats left
             </span>
           )}
         </div>
-        <div className="grid gap-2 text-sm text-textSecondary sm:grid-cols-3">
+        <div className="grid gap-2 text-sm text-muted sm:grid-cols-3">
           <div>
-            <p className="text-xs uppercase tracking-wide text-textSecondary">Time</p>
-            <p className="text-textPrimary">{timeLabel}</p>
+            <p className="text-xs uppercase tracking-wide text-muted">Time</p>
+            <p className="text-gray-200">{timeLabel}</p>
           </div>
           <div>
-            <p className="text-xs uppercase tracking-wide text-textSecondary">Price</p>
-            <p className="text-textPrimary">{priceLabel}</p>
+            <p className="text-xs uppercase tracking-wide text-muted">Price</p>
+            <p className="text-gray-200">{priceLabel}</p>
           </div>
           <div>
-            <p className="text-xs uppercase tracking-wide text-textSecondary">Show ID</p>
-            <p className="text-textPrimary">{showId ?? "-"}</p>
+            <p className="text-xs uppercase tracking-wide text-muted">Show ID</p>
+            <p className="text-gray-200">{showId ?? "-"}</p>
           </div>
         </div>
         {showId && (

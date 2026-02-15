@@ -2,7 +2,7 @@ const baseStyles = "inline-flex items-center justify-center font-medium rounded-
 
 const variantStyles = {
   primary: "bg-accent text-black hover:bg-[#e18b0f]",
-  secondary: "bg-elevated text-textPrimary border border-border hover:bg-[#353535]",
+  secondary: "bg-card text-gray-200 border border-border hover:bg-card/80",
   danger: "bg-danger text-white hover:bg-[#d73232]",
 };
 

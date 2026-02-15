@@ -10,17 +10,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "#1A1A1A",
-        surface: "#262626",
-        elevated: "#2F2F2F",
+        bg: "#1A1A1A",
+        card: "#262626",
         border: "#3A3A3A",
-
-        accent: "#FFA116",      // warm amber (primary action)
-        success: "#22C55E",
-        danger: "#EF4444",
-
-        textPrimary: "#F5F5F5",
-        textSecondary: "#A3A3A3",
+        muted: "#9ca3af",
+        accent: "#ffa116",
+        success: "#00b86b",
+        danger: "#ef4444",
       },
 
       fontFamily: {

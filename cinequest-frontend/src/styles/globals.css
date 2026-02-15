@@ -10,7 +10,7 @@ body,
 
 @layer base {
   body {
-    @apply bg-background text-textPrimary font-sans antialiased;
+    @apply bg-bg text-gray-200 font-sans antialiased;
   }
 
   ::selection {
@@ -20,10 +20,10 @@ body,
   input,
   select,
   textarea {
-    @apply bg-background border border-border rounded-md px-3 py-2 text-sm text-textPrimary placeholder:text-textSecondary focus:border-accent focus:outline-none;
+    @apply bg-bg border border-border rounded-md px-3 py-2 text-sm text-gray-200 placeholder:text-muted focus:border-accent focus:outline-none;
   }
 
   label {
-    @apply text-xs font-semibold uppercase tracking-wide text-textSecondary;
+    @apply text-xs font-semibold uppercase tracking-wide text-muted;
   }
 }

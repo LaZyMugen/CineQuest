@@ -2,10 +2,10 @@ const baseClasses =
 	"w-11 h-11 rounded-md border text-sm font-semibold flex items-center justify-center transition-colors duration-150";
 
 const seatStateClasses = {
-	available: "bg-elevated text-textPrimary border-border hover:bg-accent hover:text-black",
+	available: "bg-card text-gray-200 border-border hover:bg-card/70 hover:text-black",
 	selected: "bg-accent text-black border-accent",
-	locked: "bg-[#5A1E1E] text-textSecondary border-[#7F2D2D]",
-	confirmed: "bg-[#14532D] text-textPrimary border-[#1E8E46]",
+	locked: "bg-[#5A1E1E] text-muted border-[#7F2D2D]",
+	confirmed: "bg-[#14532D] text-gray-200 border-[#1E8E46]",
 };
 
 function resolveStatus(seat) {

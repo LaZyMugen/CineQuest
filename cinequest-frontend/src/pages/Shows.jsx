@@ -52,7 +52,7 @@ export default function Shows() {
 			>
 				<div className="space-y-4">
 					{loading && (
-						<p className="text-sm text-textSecondary">Loading shows…</p>
+						<p className="text-sm text-muted">Loading shows…</p>
 					)}
 
 					{error && (
@@ -62,7 +62,7 @@ export default function Shows() {
 					)}
 
 					{!loading && !error && shows.length === 0 && (
-						<p className="text-sm text-textSecondary">No shows available.</p>
+						<p className="text-sm text-muted">No shows available.</p>
 					)}
 
 					{!loading && !error && shows.length > 0 && (

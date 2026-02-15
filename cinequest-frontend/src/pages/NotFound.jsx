@@ -8,8 +8,8 @@ export default function NotFound() {
 		<>
 			<Navbar />
 			<PageWrapper title="Page not found" subtitle="The resource you requested does not exist.">
-				<section className="rounded-lg border border-border bg-surface p-6 space-y-4">
-					<p className="text-sm text-textSecondary">
+				<section className="rounded-lg border border-border bg-card p-6 space-y-4">
+					<p className="text-sm text-muted">
 						Double-check the URL or jump back to the movie catalog.
 					</p>
 					<Button as={Link} to="/">

@@ -69,7 +69,7 @@ export default function MyBookings() {
         }
       >
         <div className="space-y-4">
-          {loading && <p className="text-sm text-textSecondary">Loading bookings…</p>}
+          {loading && <p className="text-sm text-muted">Loading bookings…</p>}
 
           {error && (
             <p className="text-sm text-danger">
@@ -78,13 +78,13 @@ export default function MyBookings() {
           )}
 
           {!loading && !error && normalized.length === 0 && (
-            <p className="text-sm text-textSecondary">You have no bookings yet.</p>
+            <p className="text-sm text-muted">You have no bookings yet.</p>
           )}
 
           {!loading && !error && normalized.length > 0 && (
-            <div className="overflow-x-auto rounded-lg border border-border bg-surface">
+            <div className="overflow-x-auto rounded-lg border border-border bg-card">
               <table className="w-full text-sm">
-                <thead className="bg-background/70 text-left text-xs font-semibold uppercase tracking-wide text-textSecondary">
+                <thead className="bg-bg/70 text-left text-xs font-semibold uppercase tracking-wide text-muted">
                   <tr>
                     <th className="px-4 py-3">Booking</th>
                     <th className="px-4 py-3">Movie</th>
@@ -137,21 +137,21 @@ function BookingRow({ booking, onExpired }) {
   })();
 
   return (
-    <tr className="hover:bg-elevated">
-      <td className="px-4 py-3 text-textPrimary">#{booking.id}</td>
-      <td className="px-4 py-3 text-textSecondary">
+    <tr className="hover:bg-card/60">
+      <td className="px-4 py-3 text-gray-200">#{booking.id}</td>
+      <td className="px-4 py-3 text-muted">
         {booking.movie_title || "-"}
       </td>
-      <td className="px-4 py-3 text-textSecondary">
+      <td className="px-4 py-3 text-muted">
         {formatDateTime(booking.show_time)}
       </td>
-      <td className="px-4 py-3 text-textSecondary">
+      <td className="px-4 py-3 text-muted">
         {booking.seats.length ? booking.seats.join(", ") : "-"}
       </td>
       <td className="px-4 py-3">
         <StatusBadge status={statusLabel} />
       </td>
-      <td className="px-4 py-3 text-textSecondary">
+      <td className="px-4 py-3 text-muted">
         {isLocked && !isExpired ? (
           secondsLeft > 0 ? `${secondsLeft}s left` : "Locking…"
         ) : (
@@ -168,7 +168,7 @@ function BookingRow({ booking, onExpired }) {
             Re-book
           </Button>
         ) : (
-          <span className="text-textSecondary">—</span>
+          <span className="text-muted">—</span>
         )}
       </td>
     </tr>

@@ -1,9 +1,9 @@
 const STATUS_STYLES = {
   LOCKED: "text-accent border-accent/40",
   CONFIRMED: "text-success border-success/50",
-  CANCELLED: "text-textSecondary border-border",
+  CANCELLED: "text-muted border-border",
   EXPIRED: "text-danger border-danger/50",
-  UNKNOWN: "text-textSecondary border-border",
+  UNKNOWN: "text-muted border-border",
 };
 
 function normalizeStatus(status) {

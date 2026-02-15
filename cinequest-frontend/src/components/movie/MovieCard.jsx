@@ -9,15 +9,15 @@ export default function MovieCard({ movie }) {
 	const language = movie?.language || null;
 
 	return (
-		<section className="flex h-full flex-col gap-4 rounded-lg border border-border bg-surface p-5">
+		<section className="flex h-full flex-col gap-4 rounded-lg border border-border bg-card p-5">
 			<div className="space-y-2">
 				<div className="flex items-start justify-between gap-2">
-					<h3 className="text-base font-semibold text-textPrimary">{title}</h3>
-					{duration && <span className="text-xs text-textSecondary">{duration}</span>}
+					<h3 className="text-base font-semibold text-gray-200">{title}</h3>
+					{duration && <span className="text-xs text-muted">{duration}</span>}
 				</div>
-				<p className="text-sm text-textSecondary line-clamp-3">{description}</p>
+				<p className="text-sm text-muted line-clamp-3">{description}</p>
 			</div>
-			<div className="flex items-center justify-between text-xs text-textSecondary">
+			<div className="flex items-center justify-between text-xs text-muted">
 				{language && <span>Language: {language}</span>}
 				{movie?.rating && <span>Rating: {movie.rating}</span>}
 			</div>

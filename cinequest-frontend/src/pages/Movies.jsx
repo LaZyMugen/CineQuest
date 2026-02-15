@@ -14,14 +14,14 @@ export default function Movies() {
         subtitle="Browse the catalog and jump into a show."
       >
         <div className="space-y-4">
-          {loading && <p className="text-sm text-textSecondary">Loading movies…</p>}
+          {loading && <p className="text-sm text-muted">Loading movies…</p>}
 
           {error && (
             <p className="text-sm text-danger">Failed to load movies. Please try again.</p>
           )}
 
           {!loading && !error && movies.length === 0 && (
-            <p className="text-sm text-textSecondary">No movies available.</p>
+            <p className="text-sm text-muted">No movies available.</p>
           )}
 
           {!loading && !error && movies.length > 0 && (

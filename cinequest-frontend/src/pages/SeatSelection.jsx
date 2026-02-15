@@ -104,8 +104,8 @@ export default function SeatSelection() {
         subtitle={`Show #${showId}`}
       >
         <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
-          <section className="rounded-lg border border-border bg-surface p-6 space-y-6">
-            {loading && <p className="text-sm text-textSecondary">Loading seats…</p>}
+          <section className="rounded-lg border border-border bg-card p-6 space-y-6">
+            {loading && <p className="text-sm text-muted">Loading seats…</p>}
 
             {error && (
               <p className="text-sm text-danger">
@@ -114,7 +114,7 @@ export default function SeatSelection() {
             )}
 
             {!loading && !error && seats.length === 0 && (
-              <p className="text-sm text-textSecondary">
+              <p className="text-sm text-muted">
                 No seats available for this show.
               </p>
             )}
@@ -132,10 +132,10 @@ export default function SeatSelection() {
           </section>
 
           <aside className="space-y-4">
-            <section className="rounded-lg border border-border bg-surface p-5 space-y-4">
+            <section className="rounded-lg border border-border bg-card p-5 space-y-4">
               <div>
                 <h2 className="text-base font-semibold">Selection</h2>
-                <p className="text-sm text-textSecondary">
+                <p className="text-sm text-muted">
                   Pick available seats to lock them for confirmation.
                 </p>
               </div>
@@ -144,13 +144,13 @@ export default function SeatSelection() {
                   selectedSeats.map((seatId) => (
                     <span
                       key={seatId}
-                      className="rounded-sm border border-border bg-elevated px-2 py-0.5 text-textPrimary"
+                      className="rounded-sm border border-border bg-card px-2 py-0.5 text-gray-200"
                     >
                       {seatId}
                     </span>
                   ))
                 ) : (
-                  <span className="text-textSecondary">No seats selected yet.</span>
+                  <span className="text-muted">No seats selected yet.</span>
                 )}
               </div>
               <Button
@@ -163,19 +163,19 @@ export default function SeatSelection() {
             </section>
 
             {booking && (
-              <section className="rounded-lg border border-border bg-surface p-5 space-y-3 text-sm">
+              <section className="rounded-lg border border-border bg-card p-5 space-y-3 text-sm">
                 <div className="flex items-center gap-3">
-                  <h2 className="text-base font-semibold text-textPrimary">Booking</h2>
+                  <h2 className="text-base font-semibold text-gray-200">Booking</h2>
                   <StatusBadge status={isConfirmed ? "CONFIRMED" : booking.status} />
                 </div>
-                <p className="text-textSecondary">
-                  Booking ID: <span className="text-textPrimary">{booking.booking_id}</span>
+                <p className="text-muted">
+                  Booking ID: <span className="text-gray-200">{booking.booking_id}</span>
                 </p>
-                <p className="text-textSecondary">
-                  Total cost: <span className="text-textPrimary">{booking.total_cost ?? "-"}</span>
+                <p className="text-muted">
+                  Total cost: <span className="text-gray-200">{booking.total_cost ?? "-"}</span>
                 </p>
                 {booking.expires_at && (
-                  <p className="text-textSecondary">
+                  <p className="text-muted">
                     Lock expires at {new Date(booking.expires_at).toLocaleTimeString()}
                   </p>
                 )}
@@ -213,9 +213,9 @@ export default function SeatSelection() {
 
 function SeatLegend() {
   return (
-    <div className="text-xs text-textSecondary">
+    <div className="text-xs text-muted">
       <div className="flex flex-wrap gap-3">
-        <LegendItem colorClass="bg-elevated border-border" label="Available" />
+        <LegendItem colorClass="bg-card border-border" label="Available" />
         <LegendItem colorClass="bg-accent border-accent" label="Selected" />
         <LegendItem colorClass="bg-[#5A1E1E] border-[#7F2D2D]" label="Locked" />
         <LegendItem colorClass="bg-[#14532D] border-[#1E8E46]" label="Confirmed" />
