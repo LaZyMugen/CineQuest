@@ -1,8 +1,8 @@
 const STATUS_STYLES = {
-  LOCKED: "text-accent border-accent/40",
-  CONFIRMED: "text-success border-success/50",
+  LOCKED: "text-accent border-accent",
+  CONFIRMED: "text-success border-success",
   CANCELLED: "text-muted border-border",
-  EXPIRED: "text-danger border-danger/50",
+  EXPIRED: "text-danger border-danger",
   UNKNOWN: "text-muted border-border",
 };
 
@@ -21,7 +21,7 @@ export default function StatusBadge({ status, className = "" }) {
 
   return (
     <span
-      className={`inline-flex items-center rounded-sm border px-2 py-0.5 text-[11px] font-semibold tracking-wide ${style} ${className}`}
+      className={`inline-flex items-center rounded border px-2 py-1 text-xs font-medium tracking-wide ${style} ${className}`}
     >
       {normalized}
     </span>

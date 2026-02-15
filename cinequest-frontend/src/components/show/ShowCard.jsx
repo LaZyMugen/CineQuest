@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import Button from "../ui/Button";
 
 function formatDateTime(value) {
   if (!value) return "-";
@@ -17,38 +16,39 @@ export default function ShowCard({ show }) {
   const availableSeats = show?.available_seats ?? show?.seats_available;
 
   return (
-    <section className="rounded-lg border border-border bg-card p-5">
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-wrap items-center gap-3">
-          <h3 className="text-base font-semibold text-gray-200">{screenLabel}</h3>
-          {availableSeats !== undefined && (
-            <span className="text-xs text-muted">
-              {availableSeats} seats left
-            </span>
-          )}
-        </div>
-        <div className="grid gap-2 text-sm text-muted sm:grid-cols-3">
-          <div>
-            <p className="text-xs uppercase tracking-wide text-muted">Time</p>
-            <p className="text-gray-200">{timeLabel}</p>
-          </div>
-          <div>
-            <p className="text-xs uppercase tracking-wide text-muted">Price</p>
-            <p className="text-gray-200">{priceLabel}</p>
-          </div>
-          <div>
-            <p className="text-xs uppercase tracking-wide text-muted">Show ID</p>
-            <p className="text-gray-200">{showId ?? "-"}</p>
-          </div>
-        </div>
-        {showId && (
-          <div className="pt-2">
-            <Button as={Link} to={`/show/${showId}/seats`} className="w-full sm:w-auto">
-              Select Seats
-            </Button>
-          </div>
-        )}
-      </div>
-    </section>
-  );
+		<section className="bg-card border border-border rounded-md p-5">
+			<div className="flex flex-col gap-4">
+				<div className="flex flex-wrap items-center justify-between gap-2">
+					<h3 className="text-sm font-medium text-gray-200">{screenLabel}</h3>
+					{availableSeats !== undefined && (
+						<span className="text-xs text-muted">{availableSeats} seats left</span>
+					)}
+				</div>
+				<div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-sm">
+					<div>
+						<p className="text-xs text-muted uppercase">Time</p>
+						<p className="mt-1 text-gray-200">{timeLabel}</p>
+					</div>
+					<div>
+						<p className="text-xs text-muted uppercase">Price</p>
+						<p className="mt-1 font-medium text-gray-200">{priceLabel}</p>
+					</div>
+					<div>
+						<p className="text-xs text-muted uppercase">Show ID</p>
+						<p className="mt-1 text-gray-200">{showId ?? "-"}</p>
+					</div>
+					{showId && (
+						<div className="flex items-end justify-end">
+							<Link
+								to={`/show/${showId}/seats`}
+								className="inline-flex items-center justify-center rounded-md bg-accent px-4 py-2 text-sm font-medium text-black hover:opacity-90"
+							>
+								Select Seats
+							</Link>
+						</div>
+					)}
+				</div>
+			</div>
+		</section>
+	);
 }

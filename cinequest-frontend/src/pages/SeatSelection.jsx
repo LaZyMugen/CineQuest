@@ -132,35 +132,36 @@ export default function SeatSelection() {
           </section>
 
           <aside className="space-y-4">
-            <section className="rounded-lg border border-border bg-card p-5 space-y-4">
-              <div>
-                <h2 className="text-base font-semibold">Selection</h2>
-                <p className="text-sm text-muted">
-                  Pick available seats to lock them for confirmation.
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2 text-sm">
-                {selectedSeats.length > 0 ? (
-                  selectedSeats.map((seatId) => (
-                    <span
-                      key={seatId}
-                      className="rounded-sm border border-border bg-card px-2 py-0.5 text-gray-200"
-                    >
-                      {seatId}
-                    </span>
-                  ))
-                ) : (
-                  <span className="text-muted">No seats selected yet.</span>
-                )}
-              </div>
-              <Button
-                onClick={handleBookSeats}
-                disabled={bookingLoading || selectedSeats.length === 0 || loading}
+          <section className="bg-card border border-border rounded-md p-5 w-72 space-y-4">
+            <div>
+            <h3 className="text-sm font-medium text-gray-200">Selection</h3>
+            <p className="mt-1 text-xs text-muted">
+              Pick available seats.
+            </p>
+            </div>
+            <div className="mt-4 flex flex-wrap gap-2">
+            {selectedSeats.length > 0 ? (
+              selectedSeats.map((seatId) => (
+              <span
+                key={seatId}
+                className="rounded border border-border px-2 py-1 text-xs text-gray-200"
               >
-                {bookingLoading ? "Booking…" : "Book Seats"}
-              </Button>
-              {bookingError && <p className="text-sm text-danger">{bookingError}</p>}
-            </section>
+                {seatId}
+              </span>
+              ))
+            ) : (
+              <span className="text-xs text-muted">No seats selected yet.</span>
+            )}
+            </div>
+            <button
+            className="mt-5 w-full rounded-md bg-accent py-2 text-sm font-medium text-black disabled:cursor-not-allowed disabled:opacity-60"
+            onClick={handleBookSeats}
+            disabled={bookingLoading || selectedSeats.length === 0 || loading}
+            >
+            {bookingLoading ? "Booking…" : "Book Seats"}
+            </button>
+            {bookingError && <p className="text-xs text-danger">{bookingError}</p>}
+          </section>
 
             {booking && (
               <section className="rounded-lg border border-border bg-card p-5 space-y-3 text-sm">
@@ -215,10 +216,10 @@ function SeatLegend() {
   return (
     <div className="text-xs text-muted">
       <div className="flex flex-wrap gap-3">
-        <LegendItem colorClass="bg-card border-border" label="Available" />
-        <LegendItem colorClass="bg-accent border-accent" label="Selected" />
-        <LegendItem colorClass="bg-[#5A1E1E] border-[#7F2D2D]" label="Locked" />
-        <LegendItem colorClass="bg-[#14532D] border-[#1E8E46]" label="Confirmed" />
+      <LegendItem colorClass="border-border" label="Available" />
+      <LegendItem colorClass="bg-accent border-accent" label="Selected" />
+      <LegendItem colorClass="bg-border border-border" label="Locked" />
+      <LegendItem colorClass="border-success" label="Confirmed" />
       </div>
     </div>
   );

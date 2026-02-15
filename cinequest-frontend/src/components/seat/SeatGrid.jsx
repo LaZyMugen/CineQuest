@@ -11,7 +11,7 @@ export default function SeatGrid({ groupedSeats, selectedSeats, onToggle }) {
 						</span>
 						<span className="h-px flex-1 bg-border" aria-hidden />
 					</div>
-					<div className="flex flex-wrap gap-2">
+					<div className="flex flex-wrap gap-1.5">
 						{seats.map((seat) => (
 							<Seat
 								key={seat.seat_id}

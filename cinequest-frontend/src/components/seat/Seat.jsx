@@ -1,11 +1,11 @@
 const baseClasses =
-	"w-11 h-11 rounded-md border text-sm font-semibold flex items-center justify-center transition-colors duration-150";
+	"w-9 h-9 text-xs border rounded-sm flex items-center justify-center font-medium transition-colors duration-150";
 
 const seatStateClasses = {
-	available: "bg-card text-gray-200 border-border hover:bg-card/70 hover:text-black",
+	available: "border-border text-gray-200 hover:border-accent",
 	selected: "bg-accent text-black border-accent",
-	locked: "bg-[#5A1E1E] text-muted border-[#7F2D2D]",
-	confirmed: "bg-[#14532D] text-gray-200 border-[#1E8E46]",
+	locked: "bg-border text-muted border-border cursor-not-allowed",
+	confirmed: "border-success text-success",
 };
 
 function resolveStatus(seat) {
