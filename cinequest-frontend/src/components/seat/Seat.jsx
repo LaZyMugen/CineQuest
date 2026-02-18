@@ -1,45 +1,27 @@
-const baseClasses =
-	"w-9 h-9 text-xs border rounded-sm flex items-center justify-center font-medium transition-colors duration-150";
+export default function Seat({ number, status, isSelected, onClick }) {
+	const base =
+		"w-9 h-9 text-xs border rounded-sm transition-colors flex items-center justify-center";
 
-const seatStateClasses = {
-	available: "border-border text-gray-200 hover:border-accent",
-	selected: "bg-accent text-black border-accent",
-	locked: "bg-border text-muted border-border cursor-not-allowed",
-	confirmed: "border-success text-success",
-};
+	let style = "";
 
-function resolveStatus(seat) {
-	const rawStatus =
-		seat?.status || seat?.seat_status || seat?.booking_status || seat?.state;
-	if (!rawStatus) return null;
-	return rawStatus.toString().toUpperCase();
-}
-
-export default function Seat({ seat, isSelected, onToggle, disabled }) {
-	const label = seat?.seat_label || seat?.seat_number || seat?.seat_id;
-	const status = resolveStatus(seat);
-	const available = seat?.is_available ?? seat?.available ?? status !== "LOCKED";
-	const isConfirmed = status === "CONFIRMED";
-	const isLocked = status === "LOCKED" || available === false;
-	const interactive = !disabled && !isLocked && !isConfirmed;
-	const seatState = isSelected
-		? "selected"
-		: isConfirmed
-		? "confirmed"
-		: isLocked
-		? "locked"
-		: "available";
-	const className = `${baseClasses} ${seatStateClasses[seatState]}`;
+	if (status === "confirmed") {
+		style = "bg-gray-600 border-gray-600 text-gray-300 cursor-not-allowed";
+	} else if (status === "locked") {
+		style = "bg-gray-700 border-gray-700 text-gray-400 cursor-not-allowed";
+	} else if (isSelected) {
+		style = "bg-accent text-black border-accent";
+	} else {
+		style = "border-border hover:border-accent";
+	}
 
 	return (
 		<button
 			type="button"
-			onClick={() => interactive && onToggle(seat?.seat_id)}
-			disabled={!interactive}
-			aria-pressed={isSelected}
-			className={className}
+			disabled={status !== "available"}
+			onClick={onClick}
+			className={`${base} ${style}`}
 		>
-			{label}
+			{number}
 		</button>
 	);
 }

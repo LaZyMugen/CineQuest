@@ -14,14 +14,29 @@ export async function fetchMovies() {
 }
 
 export async function fetchSeats(showId) {
-  const { data, error } = await supabase
-    .from("available_seats")
+  // Prefer full seats table (shows confirmed/locked/available). Fallback to
+  // legacy available_seats view if the table doesn't exist yet.
+  let { data, error } = await supabase
+    .from("seat")
     .select("*")
     .eq("show_id", showId);
 
   if (error) {
-    console.error("Supabase fetchSeats error", error);
-    throw error;
+    console.error("Supabase fetchSeats from seat error", error);
+    const fallback = await supabase
+      .from("available_seats")
+      .select("*")
+      .eq("show_id", showId);
+
+    if (fallback.error) {
+      console.error(
+        "Supabase fetchSeats from available_seats error",
+        fallback.error,
+      );
+      throw fallback.error;
+    }
+
+    return fallback.data ?? [];
   }
 
   return data ?? [];

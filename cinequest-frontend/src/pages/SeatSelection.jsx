@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import SeatGrid from "../components/seat/SeatGrid";
 import { useSeats } from "../hooks/useSeats";
@@ -7,6 +7,7 @@ import Navbar from "../components/layout/Navbar";
 import PageWrapper from "../components/layout/PageWrapper";
 import Button from "../components/ui/Button";
 import StatusBadge from "../components/ui/StatusBadge";
+import { supabase } from "../lib/supabase";
 
 export default function SeatSelection() {
   const { id: showId } = useParams();
@@ -23,22 +24,58 @@ export default function SeatSelection() {
   // ✅ Use hook only once
   const { seats, loading, error } = useSeats(showId, refreshKey);
 
-  const groupedSeats = useMemo(() => {
+  useEffect(() => {
+    if (!showId) return;
+
+    const channel = supabase
+      .channel("seat-updates")
+      .on(
+        "postgres_changes",
+        {
+           event: "*",
+           schema: "public",
+           table: "seats",
+           filter: `show_id=eq.${showId}`,
+        },
+        () => {
+          setRefreshKey((k) => k + 1);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [showId]);
+
+  const seatsByRow = useMemo(() => {
     return seats.reduce((acc, seat) => {
       const row = seat.seat_row ?? "";
       if (!acc[row]) acc[row] = [];
-      acc[row].push(seat);
+
+      const rawStatus =
+        seat?.status || seat?.seat_status || seat?.booking_status || seat?.state;
+      const upper = rawStatus ? rawStatus.toString().toUpperCase() : null;
+      const availableFlag = seat?.is_available ?? seat?.available;
+
+      let status = "available";
+      if (upper === "CONFIRMED") status = "confirmed";
+      else if (upper === "LOCKED" || availableFlag === false) status = "locked";
+
+      const number = seat?.seat_id ?? seat?.seat_label ?? seat?.seat_number;
+
+      acc[row].push({ number, status });
       return acc;
     }, {});
   }, [seats]);
 
-  const handleToggleSeat = (seatId) => {
-    if (!seatId) return;
+  const handleToggleSeat = (seatNumber) => {
+    if (!seatNumber) return;
 
     setSelectedSeats((prev) =>
-      prev.includes(seatId)
-        ? prev.filter((id) => id !== seatId)
-        : [...prev, seatId]
+      prev.includes(seatNumber)
+        ? prev.filter((id) => id !== seatNumber)
+        : [...prev, seatNumber]
     );
   };
 
@@ -122,9 +159,9 @@ export default function SeatSelection() {
             {!loading && !error && seats.length > 0 && (
               <>
                 <SeatGrid
-                  groupedSeats={groupedSeats}
+                  seats={seatsByRow}
                   selectedSeats={selectedSeats}
-                  onToggle={handleToggleSeat}
+                  toggleSeat={handleToggleSeat}
                 />
                 <SeatLegend />
               </>

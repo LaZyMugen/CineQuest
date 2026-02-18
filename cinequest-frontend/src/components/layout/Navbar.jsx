@@ -11,6 +11,7 @@ export default function Navbar() {
 				</Link>
 				<div className="flex gap-6">
 					<NavItem to="/">Movies</NavItem>
+					<NavItem to="/architecture">System</NavItem>
 					<NavItem to="/my-bookings">My Bookings</NavItem>
 					<NavItem to="/admin">Admin</NavItem>
 				</div>
