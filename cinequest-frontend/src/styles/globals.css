@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -25,5 +27,75 @@ body,
 
   label {
     @apply text-xs font-semibold uppercase tracking-wide text-muted;
+  }
+}
+
+@layer components {
+  .schema-flow .react-flow__pane,
+  .schema-flow .react-flow__renderer,
+  .schema-flow .react-flow__bg,
+  .schema-flow .react-flow__background {
+    background-color: transparent !important;
+  }
+
+  .schema-flow .react-flow__controls {
+    @apply rounded-md border border-border bg-card;
+  }
+
+  .schema-flow .react-flow__controls-button {
+    @apply border-b border-border/50 bg-transparent text-muted transition-colors duration-150;
+  }
+
+  .schema-flow .react-flow__controls-button:hover {
+    @apply text-white;
+  }
+
+  .schema-flow .react-flow__controls-button:focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-accent text-white;
+  }
+
+  .schema-flow .react-flow__controls-button:last-child {
+    border-bottom: none;
+  }
+
+  .schema-edge path {
+    transition: stroke 150ms ease, stroke-width 150ms ease;
+  }
+
+  .schema-edge text {
+    fill: var(--cq-muted);
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+
+  .schema-edge--active path {
+    transition: stroke 150ms ease, stroke-width 150ms ease;
+  }
+
+  .schema-edge--active text {
+    fill: var(--cq-muted);
+  }
+
+  .schema-flow .react-flow__edge-textbg {
+    fill: transparent !important;
+  }
+
+  .schema-flow .react-flow__attribution {
+    display: none !important;
+  }
+
+  .schema-flow .react-flow__handle {
+    background: transparent !important;
+    border: none !important;
+  }
+
+  .schema-handle {
+    width: 10px !important;
+    height: 10px !important;
+    opacity: 0;
+    background: transparent !important;
+    border: none !important;
+    pointer-events: none;
   }
 }
