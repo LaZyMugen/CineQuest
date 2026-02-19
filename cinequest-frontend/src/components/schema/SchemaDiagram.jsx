@@ -1,6 +1,7 @@
 import { memo, useCallback, useMemo, useState } from "react";
-import ReactFlow, { Controls, Handle, MarkerType, Position } from "reactflow";
+import ReactFlow, { Controls, Handle, Position } from "reactflow";
 import "reactflow/dist/style.css";
+import SchemaEdge from "./SchemaEdge";
 
 const layout = {
   nodeWidth: 240,
@@ -228,6 +229,7 @@ const TableNode = memo(({ data }) => {
 });
 
 const nodeTypes = { schema: TableNode };
+const edgeTypes = { schema: SchemaEdge };
 
 export default function SchemaDiagram() {
   const [hoveredNodeId, setHoveredNodeId] = useState(null);
@@ -267,28 +269,18 @@ export default function SchemaDiagram() {
           id: edge.id,
           source: edge.source,
           target: edge.target,
-          type: "smoothstep",
+          type: "schema",
           label: "1 → N",
-          labelShowBg: false,
-          labelStyle: {
-            fill: "var(--cq-muted)",
-            fontSize: "10px",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-          },
           style: {
             stroke: strokeColor,
             strokeWidth: isActive ? 2 : 1.5,
+            opacity: 0.95,
           },
           selectable: false,
           focusable: false,
-          markerEnd: {
-            type: MarkerType.ArrowClosed,
-            width: 16,
-            height: 16,
-            color: strokeColor,
-          },
           ariaLabel: edge.ariaLabel,
+          interactionWidth: 28,
+          pathOptions: { offset: 22, borderRadius: 18 },
           className: isActive ? "schema-edge schema-edge--active" : "schema-edge",
         };
       }),
@@ -339,6 +331,7 @@ export default function SchemaDiagram() {
             nodes={nodes}
             edges={edges}
             nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
             className="h-full w-full"
             proOptions={{ hideAttribution: true }}
             nodesDraggable={false}
