@@ -9,11 +9,11 @@
 						<div className="flex flex-wrap gap-2">
 							{rowSeats.map((seat) => (
 								<Seat
-									key={seat.number}
-									number={seat.number}
+									key={seat.id}
+									label={seat.label}
 									status={seat.status}
-									isSelected={selectedSeats.includes(seat.number)}
-									onClick={() => toggleSeat(seat.number)}
+									isSelected={selectedSeats.includes(seat.id)}
+									onClick={() => toggleSeat(seat.id)}
 								/>
 							))}
 						</div>

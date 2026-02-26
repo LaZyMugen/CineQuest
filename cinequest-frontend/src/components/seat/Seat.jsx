@@ -1,4 +1,4 @@
-export default function Seat({ number, status, isSelected, onClick }) {
+export default function Seat({ label, status, isSelected, onClick }) {
 	const base =
 		"w-9 h-9 text-xs border rounded-sm transition-colors flex items-center justify-center";
 
@@ -21,7 +21,7 @@ export default function Seat({ number, status, isSelected, onClick }) {
 			onClick={onClick}
 			className={`${base} ${style}`}
 		>
-			{number}
+			{label}
 		</button>
 	);
 }

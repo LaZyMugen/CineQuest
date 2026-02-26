@@ -20,7 +20,7 @@ export default function Shows() {
 			setLoading(true);
 			setError(null);
 			try {
-				const data = await fetchShowsForMovie(Number(movieId));
+				const data = await fetchShowsForMovie(movieId);
 				if (isMounted) {
 					setShows(data);
 				}

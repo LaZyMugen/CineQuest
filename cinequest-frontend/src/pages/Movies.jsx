@@ -20,6 +20,8 @@ export default function Movies() {
             <p className="text-sm text-danger">Failed to load movies. Please try again.</p>
           )}
 
+
+         
           {!loading && !error && movies.length === 0 && (
             <p className="text-sm text-muted">No movies available.</p>
           )}
