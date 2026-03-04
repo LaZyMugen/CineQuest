@@ -13,6 +13,7 @@ import Navbar from "../components/layout/Navbar";
 import PageWrapper from "../components/layout/PageWrapper";
 import Button from "../components/ui/Button";
 import StatusBadge from "../components/ui/StatusBadge";
+import { saveMovieImage } from "../lib/movieImages";
 
 export default function Admin() {
 	const [movies, setMovies] = useState([]);
@@ -33,6 +34,7 @@ export default function Admin() {
 	const [movieSubmitting, setMovieSubmitting] = useState(false);
 	const [movieMessage, setMovieMessage] = useState("");
 	const [movieFormError, setMovieFormError] = useState("");
+	const [movieImageDataUrl, setMovieImageDataUrl] = useState("");
 	const [movieDeleteLoadingId, setMovieDeleteLoadingId] = useState(null);
 	const [movieDeleteError, setMovieDeleteError] = useState("");
 
@@ -122,14 +124,21 @@ export default function Admin() {
 
 		setMovieSubmitting(true);
 		try {
-			await insertMovie({
+			const createdMovie = await insertMovie({
 				title: movieTitle.trim(),
 				duration: movieDuration ? Number(movieDuration) : null,
 				language: movieLanguage.trim() || null,
 			});
+
+			const createdMovieId = createdMovie?.id ?? createdMovie?.movie_id;
+			if (movieImageDataUrl && createdMovieId) {
+				saveMovieImage(createdMovieId, movieImageDataUrl);
+			}
+
 			setMovieTitle("");
 			setMovieDuration("");
 			setMovieLanguage("");
+			setMovieImageDataUrl("");
 			setMovieMessage("Movie added successfully.");
 			loadMovies();
 		} catch (err) {
@@ -138,6 +147,30 @@ export default function Admin() {
 		} finally {
 			setMovieSubmitting(false);
 		}
+	}
+
+	function handleMovieImageChange(e) {
+		const file = e.target.files?.[0];
+		if (!file) {
+			setMovieImageDataUrl("");
+			return;
+		}
+
+		if (!file.type.startsWith("image/")) {
+			setMovieFormError("Please select a valid image file.");
+			setMovieImageDataUrl("");
+			return;
+		}
+
+		const reader = new FileReader();
+		reader.onload = () => {
+			setMovieImageDataUrl(String(reader.result || ""));
+		};
+		reader.onerror = () => {
+			setMovieFormError("Failed to read selected image.");
+			setMovieImageDataUrl("");
+		};
+		reader.readAsDataURL(file);
 	}
 
 	async function handleDeleteMovie(movieId) {
@@ -251,6 +284,23 @@ export default function Admin() {
 										className="w-full"
 									/>
 								</div>
+							</div>
+							<div className="space-y-2">
+								<label htmlFor="movie-image">Movie poster image (PNG/JPG)</label>
+								<input
+									id="movie-image"
+									type="file"
+									accept="image/png,image/jpeg,image/webp"
+									onChange={handleMovieImageChange}
+									className="w-full"
+								/>
+								{movieImageDataUrl && (
+									<img
+										src={movieImageDataUrl}
+										alt="Selected poster preview"
+										className="h-28 w-20 rounded-md border border-border object-cover"
+									/>
+								)}
 							</div>
 							<div className="flex flex-wrap items-center gap-3">
 								<Button type="submit" disabled={movieSubmitting}>

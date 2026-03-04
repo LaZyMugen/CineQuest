@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchMovies } from "../lib/api";
+import { getDefaultMovieImageByTitle, getMovieImage } from "../lib/movieImages";
 
 export function useMovies() {
 	const [movies, setMovies] = useState([]);
@@ -16,7 +17,15 @@ export function useMovies() {
 			try {
 				const data = await fetchMovies();
 				if (isMounted) {
-					setMovies(data);
+					const withLocalImages = data.map((movie) => {
+						const movieId = movie?.id ?? movie?.movie_id ?? movie?.movieId;
+						const savedPoster = getMovieImage(movieId);
+						return {
+							...movie,
+							local_poster: savedPoster || getDefaultMovieImageByTitle(movie?.title),
+						};
+					});
+					setMovies(withLocalImages);
 				}
 			} catch (err) {
 				if (isMounted) {

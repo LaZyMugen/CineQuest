@@ -238,6 +238,7 @@ export default function SeatSelection() {
 
             {!loading && !error && seats.length > 0 && (
               <>
+                <TheaterScreen />
                 <SeatGrid
                   seats={seatsByRow}
                   selectedSeats={selectedSeats}
@@ -349,6 +350,24 @@ export default function SeatSelection() {
         </div>
       </PageWrapper>
     </>
+  );
+}
+
+function TheaterScreen() {
+  return (
+    <div className="mx-auto w-full max-w-3xl pb-2">
+      <p className="mb-2 text-center text-[10px] uppercase tracking-[0.35em] text-muted">
+        Screen
+      </p>
+      <div
+        className="mx-auto h-5 w-[88%] rounded-b-[999px] border border-white/60 bg-white/85 shadow-[0_0_18px_rgba(255,255,255,0.4)]"
+        aria-hidden
+      />
+      <div
+        className="mx-auto mt-1 h-2 w-[80%] rounded-b-[999px] bg-white/25 blur-[1px]"
+        aria-hidden
+      />
+    </div>
   );
 }
 

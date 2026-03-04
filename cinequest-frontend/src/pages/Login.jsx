@@ -8,10 +8,13 @@ export default function Login() {
   const [error, setError] = useState(null);
 
   async function handleGoogleSignIn() {
+    setLoading(true);
+    setError(null);
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: "http://localhost:3000/oauth/consent",
+        redirectTo: `${window.location.origin}/oauth/consent`,
       },
     });
 

@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import Button from "../ui/Button";
+import { getDefaultMovieImageByTitle } from "../../lib/movieImages";
 
 export default function MovieCard({ movie }) {
 	const title = movie?.title || "Untitled";
@@ -7,9 +9,27 @@ export default function MovieCard({ movie }) {
 	const movieId = movie?.id ?? movie?.movie_id ?? movie?.movieId;
 	const duration = movie?.duration ? `${movie.duration} min` : null;
 	const language = movie?.language || null;
+	const fallbackPoster = getDefaultMovieImageByTitle(title);
+	const initialPosterSrc =
+		movie?.poster_url || movie?.poster || movie?.image_url || movie?.local_poster;
+	const [posterSrc, setPosterSrc] = useState(initialPosterSrc || fallbackPoster);
 
 	return (
 		<section className="flex h-full flex-col gap-4 rounded-lg border border-border bg-card p-5">
+			{posterSrc && (
+				<img
+					src={posterSrc}
+					alt={`${title} poster`}
+					className="h-48 w-full rounded-md border border-border object-cover"
+					onError={() => {
+						if (fallbackPoster && posterSrc !== fallbackPoster) {
+							setPosterSrc(fallbackPoster);
+						} else {
+							setPosterSrc(null);
+						}
+					}}
+				/>
+			)}
 			<div className="space-y-2">
 				<div className="flex items-start justify-between gap-2">
 					<h3 className="text-base font-semibold text-gray-200">{title}</h3>
