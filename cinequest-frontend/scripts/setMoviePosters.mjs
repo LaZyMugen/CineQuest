@@ -19,6 +19,9 @@ const posterMap = {
   // "Interstellar": "https://.../interstellar.jpg",
   // "Inception": "https://.../inception.jpg",
   // "Fukrey": "https://.../fukrey.jpg",
+  "Interstellar": "/intersteLLarPic.png",
+  "Inception": "/inceptionPic.png",
+  "Fukrey": "/fukreyPic.png",
   "Godfather": "https://m.media-amazon.com/images/S/pv-target-images/5bc7a0cbcc18491a4465ea2c90591d1435a20bbc62ac115dad9aa2e2252eaea6.jpg",
   "Lawrence of Arabia": "https://images.moviesanywhere.com/2190dcff0b8b23217c40f245b589e890/3d85ad24-052d-41a3-abcf-e03eb538902b.webp?h=375&resize=fit&w=250",
   "Ben-hur": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwuY-Of6MjdN-NXggwTZdwfFoFcILNjlSJ4w&s",
@@ -28,7 +31,7 @@ const posterMap = {
   "RRR": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTplrAKvflV8xZkwwVLHviytHtgjpNGCqvfmw&s",
   "Way of water": "https://akm-img-a-in.tosshub.com/indiatoday/images/story/202509/avatar-the-way-of-water-041316745-16x9_0.jpg?VersionId=LMS._igb7Wio8GMyuK5J4.rXJyVgA06R&size=690:388",
   "Das boot": "https://images.plex.tv/photo?size=medium-360&scale=1&url=https%3A%2F%2Fmetadata-static.plex.tv%2Fb%2Fgracenote%2Fbf67d1b50b4ccfa138de50baad1108a4.jpg",
-  "Schindlers List": "https://static.timesofisrael.com/jewishstanddev/uploads/2024/03/16-1-Schindlers-List-Silverscreen-Tours.jpg",
+  "Schindler's List": "https://static.timesofisrael.com/jewishstanddev/uploads/2024/03/16-1-Schindlers-List-Silverscreen-Tours.jpg",
   "Jodhaa akbar": "https://upload.wikimedia.org/wikipedia/en/0/0e/Jodhaa_akbar.jpg",
   "Once upon a time in America": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT21xsAQ2RB2BsqWUF-KISob_OjkSq6cxAEXQ&s"
 };

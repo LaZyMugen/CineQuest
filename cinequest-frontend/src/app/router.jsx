@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Landing from "../pages/Landing";
 import Login from "../pages/Login";
 import OauthConsent from "../pages/OauthConsent";
+import Payment from "../pages/Payment";
 import Movies from "../pages/Movies";
 import Shows from "../pages/Shows";
 import SeatSelection from "../pages/SeatSelection";
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
 	{
 		path: "/show/:id/seats",
 		element: <SeatSelection />,
+	},
+	{
+		path: "/payment/:bookingId",
+		element: <Payment />,
 	},
 	{
 		path: "/admin",

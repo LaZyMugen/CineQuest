@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import SeatGrid from "../components/seat/SeatGrid";
 import { useSeats } from "../hooks/useSeats";
-import { bookSeats, confirmBooking } from "../lib/api";
+import { bookSeats } from "../lib/api";
 import Navbar from "../components/layout/Navbar";
 import PageWrapper from "../components/layout/PageWrapper";
 import Button from "../components/ui/Button";
@@ -26,14 +26,14 @@ function formatSupabaseError(err) {
 
 export default function SeatSelection() {
   const { id: showId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [refreshKey, setRefreshKey] = useState(0);
   const [bookingError, setBookingError] = useState(null);
   const [bookingLoading, setBookingLoading] = useState(false);
   const [booking, setBooking] = useState(null);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const [confirmError, setConfirmError] = useState(null);
   const [isConfirmed, setIsConfirmed] = useState(false);
 
   // Parse expires_at properly (Supabase returns UTC timestamps)
@@ -62,6 +62,19 @@ export default function SeatSelection() {
 
   // ✅ Use hook only once
   const { seats, loading, error } = useSeats(showId, refreshKey);
+
+  useEffect(() => {
+    const confirmedBooking = location.state?.confirmedBooking;
+    if (!confirmedBooking?.booking_id) return;
+
+    setBooking(confirmedBooking);
+    setIsConfirmed(true);
+    setSelectedSeats([]);
+    setBookingError(null);
+    setRefreshKey((k) => k + 1);
+
+    navigate(location.pathname, { replace: true, state: null });
+  }, [location.pathname, location.state, navigate]);
 
   useEffect(() => {
     if (!showId) return;
@@ -190,29 +203,6 @@ export default function SeatSelection() {
     }
   };
 
-  const handleConfirmBooking = async () => {
-    if (!booking?.booking_id || isConfirmed || bookingIsExpired) return;
-
-    setConfirmLoading(true);
-    setConfirmError(null);
-
-    try {
-      const result = await confirmBooking(booking.booking_id);
-      console.log("Confirm booking result", result);
-
-      setIsConfirmed(true);
-      setBooking((prev) =>
-        prev ? { ...prev, status: "CONFIRMED" } : prev
-      );
-      setRefreshKey((k) => k + 1);
-    } catch (err) {
-      console.error("Confirm booking failed", err);
-      setConfirmError("Confirmation failed. Please retry.");
-    } finally {
-      setConfirmLoading(false);
-    }
-  };
-
   return (
     <>
       <Navbar />
@@ -317,7 +307,6 @@ export default function SeatSelection() {
                         setIsConfirmed(false);
                         setSelectedSeats([]);
                         setBookingError(null);
-                        setConfirmError(null);
                         setRefreshKey((k) => k + 1);
                       }}
                     >
@@ -330,14 +319,18 @@ export default function SeatSelection() {
                   <div className="space-y-2">
                     <Button
                       variant="secondary"
-                      onClick={handleConfirmBooking}
-                      disabled={confirmLoading || !booking.booking_id}
+                      onClick={() =>
+                        navigate(`/payment/${booking.booking_id}?showId=${showId}`, {
+                          state: {
+                            booking,
+                            showId,
+                          },
+                        })
+                      }
+                      disabled={!booking.booking_id}
                     >
-                      {confirmLoading ? "Confirming…" : "Confirm Booking"}
+                      Proceed to Payment
                     </Button>
-                    {confirmError && (
-                      <p className="text-xs text-danger">{confirmError}</p>
-                    )}
                   </div>
                 )}
 

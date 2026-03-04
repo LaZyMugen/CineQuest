@@ -25,7 +25,19 @@ export function useMovies() {
 							local_poster: savedPoster || getDefaultMovieImageByTitle(movie?.title),
 						};
 					});
-					setMovies(withLocalImages);
+
+					const lagaanIndex = withLocalImages.findIndex(
+						(movie) => String(movie?.title || "").trim().toLowerCase() === "lagaan"
+					);
+
+					if (lagaanIndex >= 0) {
+						const reordered = [...withLocalImages];
+						const [lagaanMovie] = reordered.splice(lagaanIndex, 1);
+						reordered.splice(Math.min(4, reordered.length), 0, lagaanMovie);
+						setMovies(reordered);
+					} else {
+						setMovies(withLocalImages);
+					}
 				}
 			} catch (err) {
 				if (isMounted) {
